@@ -1,49 +1,61 @@
-# Starlight Starter Kit: Basics
+# Mohammad Khan - Cloud & Identity Engineer Portfolio
 
-[![Built with Starlight](https://astro.badg.es/v2/built-with-starlight/tiny.svg)](https://starlight.astro.build)
+[![Deploy to GitHub Pages](https://github.com/Mjkhan9/mjkhan-portfolio-2025/actions/workflows/deploy.yml/badge.svg)](https://github.com/Mjkhan9/mjkhan-portfolio-2025/actions/workflows/deploy.yml)
 
+A professional portfolio site built with [Astro Starlight](https://starlight.astro.build/), showcasing cloud architecture, IAM automation, and IT operations projects.
+
+## 🚀 Live Site
+
+**[https://mjkhan9.github.io/mjkhan-portfolio-2025/](https://mjkhan9.github.io/mjkhan-portfolio-2025/)**
+
+## 📂 Featured Projects
+
+### 1. AWS Student Data Infrastructure
+Production-grade three-tier VPC architecture for FERPA-compliant student information systems.
+- **Tech:** AWS VPC, RDS, S3, KMS, IAM, Python/Boto3
+- **[Live Demo](https://mjkhan9.github.io/aws-student-data-infrastructure/)**
+
+### 2. IAM Lifecycle Automation Platform
+End-to-end identity lifecycle automation reducing provisioning time by 67%.
+- **Tech:** Python, Boto3, PowerShell, Active Directory, AWS IAM
+- **[Live Demo](https://mjkhan9.github.io/Automated-IAM-User-Lifecycle-Management-System-Project/)**
+
+### 3. IT Ticket Automation Simulator
+Interactive IT operations training platform with 25+ PowerShell scripts and 50+ KB articles.
+- **Tech:** HTML5, CSS3, JavaScript, Microsoft Fluent Design
+- **[Live Demo](https://mjkhan9.github.io/IT-Simulator-Project/)**
+
+## 🛠️ Development
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
 ```
-npm create astro@latest -- --template starlight
-```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## 📄 Architecture Decision Records (ADRs)
 
-## 🚀 Project Structure
+This portfolio includes documentation of key engineering decisions:
+- ADR-001: Why Astro Starlight
+- ADR-002: ASCII diagrams over Mermaid
+- ADR-003: Boto3 over Terraform for IAM
+- ADR-004: AWS-native IAM vs AD sync
+- ADR-005: Dark enterprise theme design
 
-Inside of your Astro + Starlight project, you'll see the following folders and files:
+## 📬 Contact
 
-```
-.
-├── public/
-├── src/
-│   ├── assets/
-│   ├── content/
-│   │   └── docs/
-│   └── content.config.ts
-├── astro.config.mjs
-├── package.json
-└── tsconfig.json
-```
+- **LinkedIn:** [mohammad-jawad-khan](https://linkedin.com/in/mohammad-jawad-khan)
+- **GitHub:** [Mjkhan9](https://github.com/Mjkhan9)
+- **Email:** mjkhan9@outlook.com
 
-Starlight looks for `.md` or `.mdx` files in the `src/content/docs/` directory. Each file is exposed as a route based on its file name.
+---
 
-Images can be added to `src/assets/` and embedded in Markdown with a relative link.
-
-Static assets, like favicons, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Check out [Starlight’s docs](https://starlight.astro.build/), read [the Astro documentation](https://docs.astro.build), or jump into the [Astro Discord server](https://astro.build/chat).
+Built with ❤️ using [Astro](https://astro.build/) and [Starlight](https://starlight.astro.build/)
