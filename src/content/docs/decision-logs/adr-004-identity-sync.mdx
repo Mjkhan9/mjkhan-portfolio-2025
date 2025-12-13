@@ -1,0 +1,203 @@
+---
+title: "ADR-004: AWS-Native IAM vs Active Directory Sync"
+description: "Why we designed for AWS-native IAM rather than AD federation for student data access"
+status: "accepted"
+decisionDate: 2024-11-20
+---
+
+<span class="adr-status accepted">Accepted</span>
+
+## Context
+
+The AWS Student Data Infrastructure needs identity management for accessing cloud resources. Two approaches were considered:
+
+1. **AD Federation** — Use AWS IAM Identity Center (SSO) with Active Directory as the identity source
+2. **AWS-Native IAM** — Create IAM users directly in AWS, managed by automation
+
+Educational institutions typically have Active Directory for on-premises resources. The question was whether to extend that to AWS or maintain separate identity stores.
+
+## Decision
+
+Design for **AWS-native IAM users** with automated provisioning rather than AD federation/sync.
+
+## Rationale
+
+### 1. Cleaner FERPA Audit Trails
+
+With AWS-native IAM, all access events are captured in CloudTrail with the IAM username directly:
+
+```json
+{
+  "eventSource": "s3.amazonaws.com",
+  "eventName": "GetObject",
+  "userIdentity": {
+    "type": "IAMUser",
+    "userName": "jsmith_analyst"
+  },
+  "requestParameters": {
+    "bucketName": "student-records-2024"
+  }
+}
+```
+
+With AD federation, audit logs reference session principals that require cross-referencing with AD:
+
+```json
+{
+  "userIdentity": {
+    "type": "AssumedRole",
+    "arn": "arn:aws:sts::123456789012:assumed-role/ADFS-Analysts/jsmith@domain.edu"
+  }
+}
+```
+
+### 2. Independent Access Revocation
+
+| Scenario | AD Federation | AWS-Native IAM |
+|----------|--------------|----------------|
+| Employee terminated | Disable AD account → AWS access revoked on next token refresh | Delete IAM user → Immediate AWS access removal |
+| AD outage | AWS access may be blocked | AWS access unaffected |
+| Compliance audit | Need AD + CloudTrail correlation | CloudTrail only |
+
+### 3. Simplified Compliance Reporting
+
+FERPA auditors need to answer: "Who accessed student data?"
+
+With AWS-native IAM:
+1. Query CloudTrail for `s3.amazonaws.com` events
+2. Filter by bucket name
+3. Export username list
+
+With AD federation:
+1. Query CloudTrail for events
+2. Extract role session names
+3. Cross-reference with AD logs
+4. Correlate timestamps
+
+### 4. Portfolio Demonstration Value
+
+AWS-native IAM allows the automation platform to demonstrate:
+- Direct Boto3 IAM operations
+- User lifecycle management
+- Group-based permissions
+- Tag-based access control (ABAC)
+
+Federation would hide these details behind SSO configuration.
+
+## Trade-offs
+
+### What We Lose
+
+| AD Federation Benefit | Mitigation |
+|-----------------------|------------|
+| Single sign-on experience | Users have separate AWS console login |
+| Centralized password management | AWS handles credential rotation |
+| Existing group memberships | Recreate groups in IAM |
+| MFA from AD | IAM virtual MFA devices |
+
+### What We Gain
+
+| AWS-Native Benefit | Impact |
+|--------------------|--------|
+| Direct CloudTrail attribution | Simpler audits |
+| No AD dependency for AWS | High availability |
+| Full automation control | Faster provisioning |
+| Portfolio demonstration | More code to show |
+
+## Implementation Architecture
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│                     IDENTITY ARCHITECTURE                         │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                   │
+│  ON-PREMISES                          AWS CLOUD                   │
+│  ┌─────────────────┐                  ┌─────────────────┐        │
+│  │ Active Directory│                  │    AWS IAM      │        │
+│  │   (Corporate)   │                  │ (Student Data)  │        │
+│  │                 │                  │                 │        │
+│  │  • Corporate    │    Automation    │  • Analyst      │        │
+│  │    email        │ ──────────────►  │    users        │        │
+│  │  • VPN access   │   Provisioning   │  • Admin        │        │
+│  │  • File shares  │                  │    users        │        │
+│  │                 │                  │  • Service      │        │
+│  └─────────────────┘                  │    accounts     │        │
+│                                       └─────────────────┘        │
+│                                                │                  │
+│                                                ▼                  │
+│                                       ┌─────────────────┐        │
+│                                       │   CloudTrail    │        │
+│                                       │  Audit Logging  │        │
+│                                       └─────────────────┘        │
+│                                                                   │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+## Provisioning Flow
+
+```python
+# When HR creates employee in AD, automation also creates IAM user
+def sync_user_to_aws(ad_user):
+    """
+    Creates AWS IAM user when AD user is created.
+    Does NOT federate - creates separate identity.
+    """
+    # Map AD attributes to IAM tags
+    iam_user = {
+        'username': f"{ad_user.sam_account_name}_aws",
+        'tags': {
+            'ADUsername': ad_user.sam_account_name,
+            'Department': ad_user.department,
+            'ManagerDN': ad_user.manager,
+            'SyncedFrom': 'ActiveDirectory',
+            'SyncDate': datetime.now().isoformat()
+        }
+    }
+    
+    # Determine AWS group based on AD group membership
+    if 'StudentDataAdmins' in ad_user.member_of:
+        iam_user['groups'] = ['StudentDataAdministrators']
+    elif 'StudentDataAnalysts' in ad_user.member_of:
+        iam_user['groups'] = ['StudentDataAnalysts', 'S3ReadOnly']
+    else:
+        iam_user['groups'] = ['StudentDataRestrictedAccess']
+    
+    return iam_automator.provision_user(iam_user)
+```
+
+## Consequences
+
+### Positive
+
+- CloudTrail audit logs are self-contained
+- No dependency on AD availability for AWS access
+- Full automation control with Boto3
+- Clear demonstration of IAM skills for portfolio
+- Simpler compliance reporting
+
+### Negative
+
+- Users have two sets of credentials (AD + AWS)
+- No SSO — separate login to AWS console
+- Must sync terminations from AD to AWS
+- Potentially divergent permissions over time
+
+## When to Use Federation Instead
+
+AD Federation would be better when:
+- Organization mandates SSO for all applications
+- AWS is just one of many SaaS applications
+- Security policy requires centralized credential management
+- Scale exceeds practical IAM user limits (5,000)
+
+## Related Decisions
+
+- [ADR-003: Boto3 vs Terraform](/decision-logs/adr-003-boto3-vs-terraform/) — Why Python for automation
+- [ADR-008: Orchestration Pattern](/decision-logs/adr-008-orchestration/) — How sync is orchestrated
+
+## References
+
+- [AWS IAM Identity Center](https://docs.aws.amazon.com/singlesignon/latest/userguide/)
+- [FERPA Compliance on AWS](https://aws.amazon.com/compliance/ferpa/)
+- [CloudTrail User Identity](https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-event-reference-user-identity.html)
+

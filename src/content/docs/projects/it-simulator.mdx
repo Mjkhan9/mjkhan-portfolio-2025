@@ -1,0 +1,269 @@
+---
+title: "IT Ticket Automation Simulator (ITAS)"
+description: "Interactive web platform for IT ticket handling with automated troubleshooting workflows, PowerShell script library, and training scenarios"
+role: "Full-Stack Developer & IT Operations Designer"
+technologies: ["HTML5", "CSS3", "JavaScript", "Microsoft Fluent Design"]
+githubUrl: "https://github.com/Mjkhan9/IT-Simulator-Project"
+liveUrl: "https://mjkhan9.github.io/IT-Simulator-Project/"
+duration: "November 2024"
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+## Executive Summary
+
+ITAS is a **production-ready IT operations training platform** that demonstrates real-world help desk workflows. Built with a distinctive cyberpunk/terminal-inspired dark theme, it provides hands-on simulation of ticket handling, automation execution, and troubleshooting procedures.
+
+<div class="metrics-grid">
+  <div class="metric-card">
+    <div class="metric-value">8</div>
+    <div class="metric-label">Training Scenarios</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-value">25+</div>
+    <div class="metric-label">PowerShell Scripts</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-value">50+</div>
+    <div class="metric-label">KB Articles</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-value">0</div>
+    <div class="metric-label">Dependencies</div>
+  </div>
+</div>
+
+---
+
+## The Problem
+
+Help desk technicians typically learn through tribal knowledge and on-the-job shadowing, which:
+
+1. **Lacks standardization** — Different techs follow different procedures
+2. **Creates onboarding delays** — New hires need 2-4 weeks to become productive
+3. **Misses edge cases** — Rare issues aren't encountered during training
+4. **Has no safe practice environment** — Mistakes happen on production systems
+
+**Target users**: IT Support Specialists, Help Desk Technicians, IT Operations Engineers, Technical Recruiters evaluating candidates
+
+---
+
+## Architecture
+
+The platform uses a **modular component-based architecture** with zero external dependencies:
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     Frontend Layer                          │
+├─────────────────┬─────────────────┬─────────────────────────┤
+│   HTML5 Pages   │  CSS Design     │   JavaScript Engines    │
+│   (5 modules)   │  System         │   (Ticket + Flow)       │
+└────────┬────────┴────────┬────────┴───────────┬─────────────┘
+         │                 │                    │
+         ▼                 ▼                    ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    Feature Modules                          │
+├─────────────┬─────────────┬─────────────┬───────────────────┤
+│   Ticket    │  PowerShell │  Knowledge  │     IT Labs       │
+│  Simulator  │   Library   │    Base     │                   │
+└──────┬──────┴──────┬──────┴──────┬──────┴────────┬──────────┘
+       │             │             │               │
+       ▼             ▼             ▼               ▼
+┌─────────────────────────────────────────────────────────────┐
+│                      Data Layer                             │
+├─────────────────┬─────────────────┬─────────────────────────┤
+│ Ticket Database │ Script Database │   Article Database      │
+│ (10 scenarios)  │  (25+ scripts)  │    (50+ articles)       │
+└─────────────────┴─────────────────┴─────────────────────────┘
+```
+
+### Workflow Automation Engine
+
+The ticket automation follows a 6-step troubleshooting workflow:
+
+```
+User ──► Generate Ticket ──► TicketEngine
+                                   │
+                                   ▼
+                            Display Issue Details
+                                   │
+                                   ▼
+User ──► Start Automation ──► FlowEngine
+                                   │
+                    ┌──────────────┴──────────────┐
+                    │     6-Step Workflow Loop    │
+                    ├─────────────────────────────┤
+                    │  1. Identify Issue          │
+                    │  2. Run Diagnostics         │
+                    │  3. Analyze Logs            │
+                    │  4. Apply Fix               │
+                    │  5. Validate Fix            │
+                    │  6. Generate Notes          │
+                    └──────────────┬──────────────┘
+                                   │
+                                   ▼
+                          Display Resolution Summary
+```
+
+---
+
+## Key Engineering Decisions
+
+### ADR-006: Zero Framework Architecture
+
+**Context**: Modern web development typically uses React, Vue, or similar frameworks.
+
+**Decision**: Build with pure HTML/CSS/JavaScript.
+
+**Rationale**:
+- **Demonstrates fundamentals** — Shows deep understanding of web standards
+- **Zero bundle size** — Entire app is <250KB
+- **No build step** — Works offline, instant deployment
+- **Longevity** — No framework deprecation concerns
+
+**Trade-offs**:
+
+| Pros | Cons |
+|------|------|
+| ✅ Full control over rendering | ❌ More manual DOM manipulation |
+| ✅ No dependency vulnerabilities | ❌ No component hot-reloading |
+| ✅ Works offline | ❌ More verbose code |
+| ✅ Instant deployment | |
+
+### ADR-007: Microsoft Fluent Design Inspiration
+
+**Decision**: Use a dark theme inspired by VS Code and Windows Terminal aesthetics.
+
+**Rationale**: IT professionals spend 8+ hours daily in dark-themed tools. The familiar aesthetic creates immediate comfort and credibility with technical recruiters.
+
+---
+
+## Code Highlights
+
+### Ticket Generation Engine
+
+The ticket engine uses weighted randomization to generate realistic scenarios:
+
+```javascript
+// ticketEngine.js - Realistic ticket generation
+const ticketDatabase = {
+  issues: [
+    {
+      category: "Software - Microsoft Office",
+      priority: "High",
+      description: "Microsoft Outlook is not launching...",
+      relatedScripts: ["Reset-OutlookProfile", "Repair-OfficeInstallation"],
+      keywords: ["outlook", "crash", "won't launch"]
+    },
+    // 10+ additional scenarios covering VPN, Teams, WiFi, Printers, etc.
+  ]
+};
+
+function generateNewTicket() {
+  const issue = ticketDatabase.issues[
+    Math.floor(Math.random() * ticketDatabase.issues.length)
+  ];
+  
+  return {
+    id: `INC-2024-${Math.floor(Math.random() * 90000) + 10000}`,
+    user: ticketDatabase.users[Math.floor(Math.random() * ticketDatabase.users.length)],
+    device: ticketDatabase.devices[Math.floor(Math.random() * ticketDatabase.devices.length)],
+    ...issue,
+    status: "Open",
+    createdDate: new Date().toLocaleDateString()
+  };
+}
+```
+
+### Animated Workflow Steps
+
+Each workflow step includes visual feedback and state management:
+
+```javascript
+// flowEngine.js - Step animation with state tracking
+function executeNextStep() {
+  if (currentWorkflowStep >= workflowSteps.length) {
+    completeWorkflow();
+    return;
+  }
+  
+  const step = workflowSteps[currentWorkflowStep];
+  step.status = 'active';
+  updateStepUI(step);
+  
+  // Simulate execution with realistic timing
+  setTimeout(() => {
+    step.status = 'completed';
+    updateStepUI(step);
+    currentWorkflowStep++;
+    setTimeout(() => executeNextStep(), 500);
+  }, step.duration);
+}
+```
+
+---
+
+## Feature Breakdown
+
+<Tabs>
+  <TabItem label="Ticket Simulator">
+    The core ticket simulation engine generates realistic IT support tickets with:
+    - **Dynamic ticket IDs** following enterprise naming conventions
+    - **Randomized user profiles** with department and device info
+    - **Issue categorization** across 10+ common problem types
+    - **Priority assignment** based on issue severity
+  </TabItem>
+  
+  <TabItem label="PowerShell Library">
+    A curated collection of 25+ production-ready scripts:
+    - **User Management** — Reset passwords, unlock accounts
+    - **System Diagnostics** — Event log analysis, disk health
+    - **Network Tools** — DNS cache clear, adapter reset
+    - **Office 365** — Profile repair, cache clearing
+  </TabItem>
+  
+  <TabItem label="Knowledge Base">
+    50+ searchable articles covering:
+    - **Troubleshooting guides** for common issues
+    - **Standard Operating Procedures** (SOPs)
+    - **Quick reference cards** for keyboard shortcuts
+    - **Escalation matrices** and contact lists
+  </TabItem>
+  
+  <TabItem label="IT Labs">
+    8 interactive training scenarios:
+    - Network connectivity diagnostics
+    - Active Directory user provisioning
+    - Software deployment simulation
+    - Security incident response
+  </TabItem>
+</Tabs>
+
+---
+
+## Lessons Learned
+
+1. **Design systems matter** — Investing in `fluent-core.css` upfront made feature development 3x faster
+2. **Realistic data sells** — Using actual ticket scenarios from IT experience made demos compelling
+3. **Animations need purpose** — Every glow effect and transition reinforces the "tech dashboard" narrative
+4. **Documentation is a feature** — The 50+ KB articles double as interview talking points
+
+---
+
+## Future Improvements
+
+- [ ] Add backend with Node.js + Express for persistent tickets
+- [ ] Integrate with ServiceNow API for real ticket creation
+- [ ] Implement user authentication for multi-user scenarios
+- [ ] Add AI-powered resolution suggestions
+- [ ] Create mobile-responsive ticket queue view
+
+---
+
+## View Live Demo
+
+<div class="btn-group">
+  <a href="https://mjkhan9.github.io/IT-Simulator-Project/" class="primary-btn">🚀 Launch Simulator</a>
+  <a href="https://github.com/Mjkhan9/IT-Simulator-Project" class="secondary-btn">📂 View Source</a>
+</div>
+

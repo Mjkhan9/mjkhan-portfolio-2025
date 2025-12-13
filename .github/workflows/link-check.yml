@@ -1,0 +1,43 @@
+name: Check for Broken Links
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '0 0 * * 0'  # Weekly on Sunday at midnight
+
+jobs:
+  link-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Link Checker
+        uses: lycheeverse/lychee-action@v1
+        with:
+          args: >
+            --verbose
+            --no-progress
+            --accept 200,204,301,302,307,308
+            --exclude-mail
+            --exclude "linkedin.com"
+            --exclude "localhost"
+            './src/**/*.md'
+            './src/**/*.mdx'
+          fail: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Create Issue on Failure
+        if: failure()
+        uses: peter-evans/create-issue-from-file@v5
+        with:
+          title: 🔗 Broken Links Detected
+          content-filepath: ./lychee/out.md
+          labels: |
+            documentation
+            automated
+

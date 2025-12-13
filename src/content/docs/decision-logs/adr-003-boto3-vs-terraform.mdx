@@ -1,0 +1,201 @@
+---
+title: "ADR-003: Using Boto3 over Terraform for IAM Automation"
+description: "Why imperative Python was chosen over declarative IaC for IAM provisioning"
+status: "accepted"
+decisionDate: 2024-11-15
+---
+
+<span class="adr-status accepted">Accepted</span>
+
+## Context
+
+The IAM automation platform needed to create, modify, and delete users programmatically across AWS IAM. Two primary approaches were considered:
+
+1. **Declarative (Terraform)** — Define desired state, let tool reconcile
+2. **Imperative (Boto3)** — Write explicit steps in Python
+
+## Decision
+
+Use **Python with Boto3** for all IAM automation in the AWS Student Data Infrastructure project.
+
+## Detailed Comparison
+
+| Factor | Terraform | Boto3 |
+|--------|-----------|-------|
+| **Paradigm** | Declarative (state-based) | Imperative (action-based) |
+| **Dynamic Logic** | Limited (count, for_each, conditionals) | Full Python conditionals, loops |
+| **User Input** | Variables file or tfvars | Interactive prompts, CLI args |
+| **Error Handling** | Basic (retry with backoff) | Full try/except with custom logic |
+| **State Management** | Requires state file | Stateless (query current state) |
+| **Demo Mode** | Needs mock provider | Simple `if DEMO_MODE` flag |
+| **Learning Curve** | HCL syntax | Python (widely known) |
+
+## Rationale
+
+### 1. User provisioning is inherently imperative
+
+Creating a user follows a specific sequence:
+1. Create user
+2. Add to groups
+3. Set tags
+4. Create login profile
+5. Attach policies
+
+This maps naturally to Python functions, not state declarations.
+
+### 2. Demo mode is critical for portfolios
+
+```python
+# Easy demo mode implementation with Boto3
+if os.getenv('DEMO_MODE'):
+    print(f"[DEMO] Would create user: {username}")
+    print(f"[DEMO] Would add to groups: {groups}")
+else:
+    iam.create_user(UserName=username, Tags=tags)
+    for group in groups:
+        iam.add_user_to_group(GroupName=group, UserName=username)
+```
+
+Terraform would require a mock provider or `terraform plan` only — less intuitive for recruiters viewing the demo.
+
+### 3. Recruiter-friendly code
+
+Python is more universally readable than HCL:
+
+```python
+# Python - Clear intent
+def provision_student_data_analyst(username, department):
+    """Provision a new data analyst with read-only access"""
+    iam.create_user(UserName=username)
+    iam.add_user_to_group(GroupName='StudentDataAnalysts', UserName=username)
+```
+
+vs.
+
+```hcl
+# Terraform - Requires HCL knowledge
+resource "aws_iam_user" "analyst" {
+  name = var.username
+}
+
+resource "aws_iam_user_group_membership" "analyst_groups" {
+  user = aws_iam_user.analyst.name
+  groups = ["StudentDataAnalysts"]
+}
+```
+
+### 4. Integration with existing tooling
+
+The IAM Lifecycle project uses PowerShell for Active Directory. Python orchestrates both:
+
+```python
+# Unified orchestration
+orchestrator.provision({
+    'username': 'jdoe',
+    'systems': ['active_directory', 'aws_iam'],
+    'role': 'analyst'
+})
+```
+
+## Trade-offs
+
+### What We Lose
+
+| Terraform Feature | Mitigation |
+|-------------------|------------|
+| State management | Query IAM API for current state |
+| Drift detection | Scheduled audit scripts |
+| Dependency graph | Manual ordering in code |
+| Plan preview | Demo mode with verbose logging |
+
+### What We Gain
+
+| Boto3 Benefit | Impact |
+|---------------|--------|
+| Full conditionals | Complex role-based logic |
+| Error handling | Graceful failure with retry |
+| Demo mode | Portfolio demonstrations work |
+| No state file | Simpler CI/CD, no S3 backend |
+
+## Implementation Example
+
+```python
+# iam_automator.py - Real implementation
+class IAMAutomator:
+    def __init__(self, demo_mode=False):
+        self.demo_mode = demo_mode
+        if not demo_mode:
+            self.iam = boto3.client('iam')
+    
+    def provision_user(self, config):
+        username = config['username']
+        role = config['role']
+        
+        # Conditional logic based on role
+        if role == 'admin':
+            groups = ['Administrators', 'SecurityAudit']
+            require_mfa = True
+        elif role == 'analyst':
+            groups = ['DataAnalysts', 'S3ReadOnly']
+            require_mfa = False
+        else:
+            groups = ['DefaultUsers']
+            require_mfa = False
+        
+        if self.demo_mode:
+            return self._simulate_provision(username, groups)
+        
+        # Actual provisioning with error handling
+        try:
+            self.iam.create_user(UserName=username)
+            for group in groups:
+                self.iam.add_user_to_group(GroupName=group, UserName=username)
+            
+            if require_mfa:
+                self._setup_mfa_requirement(username)
+            
+            return {'status': 'success', 'user': username, 'groups': groups}
+        
+        except self.iam.exceptions.EntityAlreadyExistsException:
+            return {'status': 'exists', 'user': username}
+        
+        except Exception as e:
+            return {'status': 'error', 'message': str(e)}
+```
+
+## Consequences
+
+### Positive
+
+- Full programmatic control over provisioning logic
+- Easy demo mode for portfolio demonstrations
+- No state file management or S3 backend configuration
+- Direct AWS SDK proficiency demonstration to recruiters
+- Unified language with PowerShell orchestration
+
+### Negative
+
+- No automatic drift detection (requires manual audit)
+- Manual idempotency implementation required
+- No dependency graph visualization
+- Updates require code changes, not state reconciliation
+
+## When to Use Terraform Instead
+
+Terraform would be better for:
+- Infrastructure resources (VPCs, subnets, RDS)
+- Multi-account deployments
+- Team collaboration with state locking
+- Compliance requirements mandating IaC audit trails
+
+## Related Decisions
+
+- [ADR-004: Identity Sync Strategy](/decision-logs/adr-004-identity-sync/) — How AD and AWS IAM relate
+- [ADR-008: Orchestration Pattern](/decision-logs/adr-008-orchestration/) — Why central orchestration
+
+## References
+
+- [AWS SDK for Python (Boto3)](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html)
+- [Terraform AWS Provider](https://registry.terraform.io/providers/hashicorp/aws/latest/docs)
+- [Imperative vs Declarative](https://www.terraform.io/intro/vs/chef-puppet)
+

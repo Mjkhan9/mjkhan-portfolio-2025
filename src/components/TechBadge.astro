@@ -1,0 +1,17 @@
+---
+interface Props {
+  label: string;
+  variant?: 'default' | 'aws' | 'purple';
+}
+
+const { label, variant = 'default' } = Astro.props;
+
+const badgeClasses = {
+  default: 'badge',
+  aws: 'badge badge-aws',
+  purple: 'badge badge-purple'
+};
+---
+
+<span class={badgeClasses[variant]}>{label}</span>
+
