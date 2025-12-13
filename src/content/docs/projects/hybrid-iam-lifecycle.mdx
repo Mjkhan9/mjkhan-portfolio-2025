@@ -8,8 +8,6 @@ liveUrl: "https://mjkhan9.github.io/Automated-IAM-User-Lifecycle-Management-Syst
 duration: "November 2024"
 ---
 
-import { Tabs, TabItem } from '@astrojs/starlight/components';
-
 ## Executive Summary
 
 This platform automates the complete identity lifecycle for enterprise users across **Active Directory and AWS IAM**. It demonstrates the intersection of on-premises identity management and cloud IAM—the exact skill set required for modern IT Operations and Cloud Engineering roles.
@@ -511,47 +509,45 @@ The platform tracks operational metrics in real-time:
 
 ## Feature Breakdown
 
-<Tabs>
-  <TabItem label="User Provisioning">
-    **Automated User Provisioning**
-    
-    - Template-based user creation from department standards
-    - Automatic group membership inheritance
-    - Multi-system provisioning (AD + AWS IAM)
-    - Manager notification workflows
-    - Audit attribute tagging
-  </TabItem>
-  
-  <TabItem label="Access Modifications">
-    **Role & Access Changes**
-    
-    - Department transfer automation
-    - Role change with permission recalculation
-    - Temporary elevated access with auto-revoke
-    - Group membership bulk updates
-    - Cross-system synchronization
-  </TabItem>
-  
-  <TabItem label="Deprovisioning">
-    **Secure Offboarding**
-    
-    - Immediate account disable on termination
-    - License reclamation tracking
-    - Data retention policy compliance
-    - Manager notification and delegation
-    - 90-day archive before deletion
-  </TabItem>
-  
-  <TabItem label="Audit & Compliance">
-    **Complete Audit Trail**
-    
-    - Every action logged with timestamp
-    - Who requested, who approved, who executed
-    - CloudTrail integration for AWS actions
-    - Windows Event Log for AD actions
-    - Compliance report generation
-  </TabItem>
-</Tabs>
+### User Provisioning
+
+**Automated User Provisioning**
+
+- Template-based user creation from department standards
+- Automatic group membership inheritance
+- Multi-system provisioning (AD + AWS IAM)
+- Manager notification workflows
+- Audit attribute tagging
+
+### Access Modifications
+
+**Role & Access Changes**
+
+- Department transfer automation
+- Role change with permission recalculation
+- Temporary elevated access with auto-revoke
+- Group membership bulk updates
+- Cross-system synchronization
+
+### Deprovisioning
+
+**Secure Offboarding**
+
+- Immediate account disable on termination
+- License reclamation tracking
+- Data retention policy compliance
+- Manager notification and delegation
+- 90-day archive before deletion
+
+### Audit & Compliance
+
+**Complete Audit Trail**
+
+- Every action logged with timestamp
+- Who requested, who approved, who executed
+- CloudTrail integration for AWS actions
+- Windows Event Log for AD actions
+- Compliance report generation
 
 ---
 
