@@ -12,7 +12,7 @@
   "dependencies": {
     "@astrojs/mdx": "^4.3.13",
     "@astrojs/starlight": "^0.37.1",
-    "@astrojs/starlight-tailwind": "^4.0.0",
+    "@astrojs/starlight-tailwind": "^3.0.0",
     "@astrojs/tailwind": "^6.0.2",
     "@iconify-json/carbon": "^1.2.15",
     "@iconify-json/logos": "^1.2.10",
