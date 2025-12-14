@@ -22,22 +22,12 @@ jobs:
             --verbose
             --no-progress
             --accept 200,204,301,302,307,308
-            --exclude-mail
             --exclude "linkedin.com"
             --exclude "localhost"
-            './src/**/*.md'
-            './src/**/*.mdx'
+            --exclude "tel:"
+            --exclude "mailto:"
+            './index.html'
+            './README.md'
           fail: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      
-      - name: Create Issue on Failure
-        if: failure()
-        uses: peter-evans/create-issue-from-file@v5
-        with:
-          title: 🔗 Broken Links Detected
-          content-filepath: ./lychee/out.md
-          labels: |
-            documentation
-            automated
-
