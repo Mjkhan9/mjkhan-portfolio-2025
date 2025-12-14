@@ -26,6 +26,8 @@ jobs:
             --exclude "localhost"
             --exclude "tel:"
             --exclude "mailto:"
+            --exclude "fonts.googleapis.com"
+            --exclude "fonts.gstatic.com"
             './index.html'
             './README.md'
           fail: true
