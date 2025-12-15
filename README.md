@@ -2,7 +2,7 @@
 
 [![Deploy to GitHub Pages](https://github.com/Mjkhan9/mjkhan-portfolio-2025/actions/workflows/deploy.yml/badge.svg)](https://github.com/Mjkhan9/mjkhan-portfolio-2025/actions/workflows/deploy.yml)
 
-A clean, single-page portfolio showcasing cloud architecture, IAM automation, and infrastructure projects.
+A clean, single-page static HTML portfolio showcasing cloud architecture, IAM automation, and infrastructure projects. No build step required - just deploy `index.html` to GitHub Pages.
 
 ## 🚀 Live Site
 
