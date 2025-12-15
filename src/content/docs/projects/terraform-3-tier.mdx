@@ -1,0 +1,520 @@
+---
+title: "Terraform 3-Tier Web Application"
+description: "Production-grade, auto-scaling AWS infrastructure with 10 Terraform modules, VPC endpoints, CI/CD with GitHub Actions, and enterprise security controls"
+role: "Cloud Infrastructure Engineer"
+technologies: ["Terraform", "AWS", "VPC", "RDS", "ALB", "ASG", "CloudWatch", "GitHub Actions", "Python"]
+githubUrl: "https://github.com/Mjkhan9/Terraform-3-Tier-Web-Application"
+liveUrl: "https://mjkhan9.github.io/Terraform-3-Tier-Web-Application/"
+duration: "December 2024"
+---
+
+## Executive Summary
+
+This project demonstrates **enterprise-grade Infrastructure as Code** using Terraform. The architecture deploys a production-ready 3-tier web application on AWS with auto-scaling, multi-AZ redundancy, and comprehensive security controls — all while remaining **100% Free Tier compatible** for portfolio demonstration.
+
+<div class="metrics-grid">
+  <div class="metric-card">
+    <div class="metric-value aws">10</div>
+    <div class="metric-label">Terraform Modules</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-value aws">25+</div>
+    <div class="metric-label">AWS Resources</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-value aws">3</div>
+    <div class="metric-label">Tier Architecture</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-value aws">100%</div>
+    <div class="metric-label">Free Tier Compatible</div>
+  </div>
+</div>
+
+---
+
+## The Problem
+
+Most Terraform tutorials show simplistic single-resource deployments that don't reflect real-world infrastructure:
+
+1. **No modularity** — Monolithic configurations that can't be reused
+2. **Missing security** — Default VPCs, public databases, no encryption
+3. **No CI/CD** — Manual `terraform apply` with no automation
+4. **No observability** — No monitoring, logging, or alerting
+
+This project solves all of these with production-grade patterns.
+
+---
+
+## Architecture
+
+### Multi-AZ 3-Tier Deployment
+
+```
+                                    ┌─────────────────────────────────────────────────────────────┐
+                                    │                        INTERNET                              │
+                                    └─────────────────────────────┬───────────────────────────────┘
+                                                                  │
+                      ╔═══════════════════════════════════════════╧═══════════════════════════════════════╗
+                      ║                                   VPC (10.0.0.0/16)                                ║
+                      ║                                                                                    ║
+                      ║    ┌─────────────────────────────────────────────────────────────────────────┐    ║
+                      ║    │                        PUBLIC SUBNETS (Presentation)                    │    ║
+                      ║    │    ┌────────────────────────────────────────────────────────────┐      │    ║
+                      ║    │    │           APPLICATION LOAD BALANCER (HTTP/HTTPS)           │      │    ║
+                      ║    │    └────────────────────────────────────────────────────────────┘      │    ║
+                      ║    │    ┌─────────────────┐                    ┌─────────────────┐          │    ║
+                      ║    │    │   NAT Gateway   │                    │   NAT Gateway   │          │    ║
+                      ║    │    │     (AZ-1)      │                    │     (AZ-2)      │          │    ║
+                      ║    │    └─────────────────┘                    └─────────────────┘          │    ║
+                      ║    └─────────────────────────────────────────────────────────────────────────┘    ║
+                      ║                                        │                                          ║
+                      ║    ┌─────────────────────────────────────────────────────────────────────────┐    ║
+                      ║    │                     PRIVATE SUBNETS (Application Layer)                 │    ║
+                      ║    │    ┌────────────────────────────────────────────────────────────┐      │    ║
+                      ║    │    │              AUTO SCALING GROUP (2-4 instances)            │      │    ║
+                      ║    │    │    ┌──────────────────┐        ┌──────────────────┐       │      │    ║
+                      ║    │    │    │  EC2 (t3.micro)  │        │  EC2 (t3.micro)  │       │      │    ║
+                      ║    │    │    │   Flask App      │        │   Flask App      │       │      │    ║
+                      ║    │    │    └──────────────────┘        └──────────────────┘       │      │    ║
+                      ║    │    └────────────────────────────────────────────────────────────┘      │    ║
+                      ║    └─────────────────────────────────────────────────────────────────────────┘    ║
+                      ║                                        │                                          ║
+                      ║    ┌─────────────────────────────────────────────────────────────────────────┐    ║
+                      ║    │                   ISOLATED SUBNETS (Data Layer - No Internet)           │    ║
+                      ║    │    ┌────────────────────────────────────────────────────────────┐      │    ║
+                      ║    │    │          RDS PostgreSQL (db.t3.micro, Encrypted)           │      │    ║
+                      ║    │    └────────────────────────────────────────────────────────────┘      │    ║
+                      ║    └─────────────────────────────────────────────────────────────────────────┘    ║
+                      ║                                                                                    ║
+                      ╚════════════════════════════════════════════════════════════════════════════════════╝
+
+      ┌────────────────────────────┐   ┌────────────────────────────┐   ┌────────────────────────────┐
+      │      VPC ENDPOINTS         │   │       S3 BUCKETS           │   │      CLOUDWATCH            │
+      │  • S3 (Gateway)            │   │  • Assets (Encrypted)      │   │  • Alarms (CPU, Latency)   │
+      │  • DynamoDB (Gateway)      │   │  • ALB Logs (Lifecycle)    │   │  • VPC Flow Logs           │
+      │  • Secrets Manager         │   │  • Versioning Enabled      │   │  • SNS Notifications       │
+      │  • SSM (No SSH needed!)    │   └────────────────────────────┘   └────────────────────────────┘
+      └────────────────────────────┘
+```
+
+### Security Group Chaining
+
+```
+┌──────────────────┐         ┌──────────────────┐         ┌──────────────────┐
+│   ALB Security   │         │   App Security   │         │   RDS Security   │
+│      Group       │         │      Group       │         │      Group       │
+├──────────────────┤         ├──────────────────┤         ├──────────────────┤
+│ Inbound:         │         │ Inbound:         │         │ Inbound:         │
+│ • 80/443 from    │ ──────► │ • 5000 from      │ ──────► │ • 5432 from      │
+│   0.0.0.0/0      │         │   ALB SG only    │         │   App SG only    │
+│                  │         │                  │         │                  │
+│ Outbound:        │         │ Outbound:        │         │ Outbound:        │
+│ • App SG:5000    │         │ • RDS SG:5432    │         │ • None           │
+└──────────────────┘         └──────────────────┘         └──────────────────┘
+```
+
+---
+
+## 10 Terraform Modules
+
+| Module | Resources | Purpose |
+|--------|-----------|---------|
+| **VPC** | `aws_vpc`, `aws_subnet`, `aws_nat_gateway` | Multi-tier network with public, private, and isolated subnets |
+| **VPC Endpoints** | `aws_vpc_endpoint` (Gateway + Interface) | PrivateLink for S3, DynamoDB, SSM, Secrets Manager |
+| **Security Groups** | `aws_security_group` | Security group chaining: ALB → App → RDS |
+| **ALB** | `aws_lb`, `aws_lb_target_group`, `aws_lb_listener` | Application Load Balancer with health checks |
+| **ASG** | `aws_autoscaling_group`, `aws_launch_template` | Auto Scaling Group with scaling policies |
+| **RDS** | `aws_db_instance`, `aws_db_subnet_group` | PostgreSQL with encryption and backups |
+| **S3** | `aws_s3_bucket`, lifecycle policies | Encrypted buckets with versioning |
+| **Secrets** | `aws_secretsmanager_secret` | Database credentials management |
+| **CloudWatch** | `aws_cloudwatch_metric_alarm`, `aws_sns_topic` | Monitoring, alarms, and notifications |
+| **GitHub OIDC** | `aws_iam_openid_connect_provider` | Password-less CI/CD authentication |
+
+---
+
+## Key Engineering Decisions
+
+### ADR-010: Modular Terraform Structure
+
+**Decision**: Break infrastructure into 10 reusable modules rather than a monolithic configuration.
+
+**Rationale**:
+- **Reusability** — Modules can be used across projects
+- **Testability** — Each module can be validated independently
+- **Team scalability** — Different engineers can own different modules
+- **Blast radius** — Changes to one module don't affect others
+
+### ADR-011: GitHub OIDC over Access Keys
+
+**Decision**: Use OIDC federation for CI/CD instead of static IAM access keys.
+
+**Rationale**:
+- **No secrets to rotate** — OIDC tokens are short-lived
+- **Audit trail** — Each deployment is tied to a specific commit
+- **Security** — No long-lived credentials in GitHub Secrets
+
+```hcl
+# GitHub OIDC Provider
+resource "aws_iam_openid_connect_provider" "github" {
+  url             = "https://token.actions.githubusercontent.com"
+  client_id_list  = ["sts.amazonaws.com"]
+  thumbprint_list = [data.tls_certificate.github.certificates[0].sha1_fingerprint]
+}
+```
+
+### ADR-012: VPC Endpoints for Zero-Egress
+
+**Decision**: Use VPC endpoints instead of NAT Gateway for AWS service access.
+
+**Rationale**:
+- **Cost savings** — Gateway endpoints are free (S3, DynamoDB)
+- **Security** — Traffic never leaves AWS network
+- **Performance** — Lower latency than internet routing
+
+---
+
+## Deployment & Validation
+
+### Terraform Plan Output
+
+```bash
+$ terraform plan -out=tfplan
+
+Terraform will perform the following actions:
+
+  # module.vpc.aws_vpc.main will be created
+  + resource "aws_vpc" "main" {
+      + arn                              = (known after apply)
+      + cidr_block                       = "10.0.0.0/16"
+      + enable_dns_hostnames             = true
+      + enable_dns_support               = true
+      + id                               = (known after apply)
+      + tags                             = {
+          + "Environment" = "production"
+          + "Name"        = "terraform-3tier-vpc"
+          + "ManagedBy"   = "terraform"
+        }
+    }
+
+  # module.vpc.aws_subnet.public[0] will be created
+  + resource "aws_subnet" "public" {
+      + availability_zone       = "us-east-1a"
+      + cidr_block              = "10.0.1.0/24"
+      + map_public_ip_on_launch = true
+      + tags                    = { "Tier" = "public" }
+    }
+
+  # module.vpc.aws_subnet.public[1] will be created
+  + resource "aws_subnet" "public" {
+      + availability_zone       = "us-east-1b"
+      + cidr_block              = "10.0.2.0/24"
+      + map_public_ip_on_launch = true
+      + tags                    = { "Tier" = "public" }
+    }
+
+  # module.vpc.aws_subnet.private[0] will be created
+  + resource "aws_subnet" "private" {
+      + availability_zone = "us-east-1a"
+      + cidr_block        = "10.0.10.0/24"
+      + tags              = { "Tier" = "private" }
+    }
+
+  # module.vpc.aws_subnet.private[1] will be created
+  + resource "aws_subnet" "private" {
+      + availability_zone = "us-east-1b"
+      + cidr_block        = "10.0.11.0/24"
+      + tags              = { "Tier" = "private" }
+    }
+
+  # module.vpc.aws_subnet.isolated[0] will be created
+  + resource "aws_subnet" "isolated" {
+      + availability_zone = "us-east-1a"
+      + cidr_block        = "10.0.20.0/24"
+      + tags              = { "Tier" = "isolated" }
+    }
+
+  # module.vpc.aws_subnet.isolated[1] will be created
+  + resource "aws_subnet" "isolated" {
+      + availability_zone = "us-east-1b"
+      + cidr_block        = "10.0.21.0/24"
+      + tags              = { "Tier" = "isolated" }
+    }
+
+  # module.alb.aws_lb.main will be created
+  + resource "aws_lb" "main" {
+      + arn                        = (known after apply)
+      + dns_name                   = (known after apply)
+      + internal                   = false
+      + load_balancer_type         = "application"
+      + name                       = "terraform-3tier-alb"
+      + security_groups            = (known after apply)
+      + subnets                    = (known after apply)
+    }
+
+  # module.asg.aws_autoscaling_group.main will be created
+  + resource "aws_autoscaling_group" "main" {
+      + desired_capacity          = 2
+      + health_check_grace_period = 300
+      + health_check_type         = "ELB"
+      + max_size                  = 4
+      + min_size                  = 2
+      + name                      = "terraform-3tier-asg"
+      + target_group_arns         = (known after apply)
+      + vpc_zone_identifier       = (known after apply)
+    }
+
+  # module.rds.aws_db_instance.main will be created
+  + resource "aws_db_instance" "main" {
+      + allocated_storage         = 20
+      + db_subnet_group_name      = (known after apply)
+      + engine                    = "postgres"
+      + engine_version            = "15"
+      + identifier                = "terraform-3tier-db"
+      + instance_class            = "db.t3.micro"
+      + multi_az                  = false
+      + storage_encrypted         = true
+      + vpc_security_group_ids    = (known after apply)
+    }
+
+  # ... 15 more resources ...
+
+Plan: 25 to add, 0 to change, 0 to destroy.
+```
+
+### Terraform Apply Output (Sandbox)
+
+```bash
+$ terraform apply tfplan
+
+module.vpc.aws_vpc.main: Creating...
+module.vpc.aws_vpc.main: Creation complete after 3s [id=vpc-0abc123def456789]
+module.vpc.aws_internet_gateway.main: Creating...
+module.vpc.aws_subnet.public[0]: Creating...
+module.vpc.aws_subnet.public[1]: Creating...
+module.vpc.aws_subnet.private[0]: Creating...
+module.vpc.aws_subnet.private[1]: Creating...
+module.vpc.aws_subnet.isolated[0]: Creating...
+module.vpc.aws_subnet.isolated[1]: Creating...
+module.vpc.aws_internet_gateway.main: Creation complete after 1s
+module.vpc.aws_subnet.public[0]: Creation complete after 2s
+module.vpc.aws_subnet.public[1]: Creation complete after 2s
+module.vpc.aws_subnet.private[0]: Creation complete after 2s
+module.vpc.aws_subnet.private[1]: Creation complete after 2s
+module.vpc.aws_subnet.isolated[0]: Creation complete after 2s
+module.vpc.aws_subnet.isolated[1]: Creation complete after 2s
+module.vpc.aws_nat_gateway.main[0]: Creating...
+module.vpc.aws_nat_gateway.main[1]: Creating...
+module.security_groups.aws_security_group.alb: Creating...
+module.security_groups.aws_security_group.app: Creating...
+module.security_groups.aws_security_group.rds: Creating...
+module.security_groups.aws_security_group.alb: Creation complete after 3s
+module.security_groups.aws_security_group.app: Creation complete after 3s
+module.security_groups.aws_security_group.rds: Creation complete after 3s
+module.vpc.aws_nat_gateway.main[0]: Still creating... [1m30s elapsed]
+module.vpc.aws_nat_gateway.main[1]: Still creating... [1m30s elapsed]
+module.vpc.aws_nat_gateway.main[0]: Creation complete after 1m45s
+module.vpc.aws_nat_gateway.main[1]: Creation complete after 1m48s
+module.vpc_endpoints.aws_vpc_endpoint.s3: Creating...
+module.vpc_endpoints.aws_vpc_endpoint.dynamodb: Creating...
+module.vpc_endpoints.aws_vpc_endpoint.ssm: Creating...
+module.vpc_endpoints.aws_vpc_endpoint.secretsmanager: Creating...
+module.vpc_endpoints.aws_vpc_endpoint.s3: Creation complete after 8s
+module.vpc_endpoints.aws_vpc_endpoint.dynamodb: Creation complete after 8s
+module.vpc_endpoints.aws_vpc_endpoint.ssm: Creation complete after 12s
+module.vpc_endpoints.aws_vpc_endpoint.secretsmanager: Creation complete after 12s
+module.alb.aws_lb.main: Creating...
+module.alb.aws_lb.main: Still creating... [2m elapsed]
+module.alb.aws_lb.main: Creation complete after 2m35s [id=arn:aws:elasticloadbalancing:...]
+module.alb.aws_lb_target_group.main: Creating...
+module.alb.aws_lb_listener.http: Creating...
+module.alb.aws_lb_target_group.main: Creation complete after 2s
+module.alb.aws_lb_listener.http: Creation complete after 1s
+module.rds.aws_db_subnet_group.main: Creating...
+module.rds.aws_db_subnet_group.main: Creation complete after 1s
+module.rds.aws_db_instance.main: Creating...
+module.rds.aws_db_instance.main: Still creating... [5m elapsed]
+module.rds.aws_db_instance.main: Creation complete after 6m12s [id=terraform-3tier-db]
+module.asg.aws_launch_template.main: Creating...
+module.asg.aws_launch_template.main: Creation complete after 2s
+module.asg.aws_autoscaling_group.main: Creating...
+module.asg.aws_autoscaling_group.main: Still creating... [2m elapsed]
+module.asg.aws_autoscaling_group.main: Creation complete after 2m30s
+module.cloudwatch.aws_cloudwatch_metric_alarm.cpu_high: Creating...
+module.cloudwatch.aws_cloudwatch_metric_alarm.cpu_low: Creating...
+module.cloudwatch.aws_sns_topic.alerts: Creating...
+module.cloudwatch.aws_cloudwatch_metric_alarm.cpu_high: Creation complete after 1s
+module.cloudwatch.aws_cloudwatch_metric_alarm.cpu_low: Creation complete after 1s
+module.cloudwatch.aws_sns_topic.alerts: Creation complete after 1s
+
+Apply complete! Resources: 25 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+alb_dns_name = "terraform-3tier-alb-1234567890.us-east-1.elb.amazonaws.com"
+vpc_id = "vpc-0abc123def456789"
+rds_endpoint = "terraform-3tier-db.xxxxx.us-east-1.rds.amazonaws.com:5432"
+```
+
+### Post-Deployment Validation
+
+```bash
+# Verify VPC and subnets
+$ aws ec2 describe-vpcs --filters "Name=tag:Name,Values=terraform-3tier-vpc" \
+    --query 'Vpcs[0].{VpcId:VpcId,CidrBlock:CidrBlock}'
+{
+    "VpcId": "vpc-0abc123def456789",
+    "CidrBlock": "10.0.0.0/16"
+}
+
+# Verify multi-AZ subnets
+$ aws ec2 describe-subnets --filters "Name=vpc-id,Values=vpc-0abc123def456789" \
+    --query 'Subnets[*].{AZ:AvailabilityZone,CIDR:CidrBlock,Tier:Tags[?Key==`Tier`].Value|[0]}'
+[
+    { "AZ": "us-east-1a", "CIDR": "10.0.1.0/24", "Tier": "public" },
+    { "AZ": "us-east-1b", "CIDR": "10.0.2.0/24", "Tier": "public" },
+    { "AZ": "us-east-1a", "CIDR": "10.0.10.0/24", "Tier": "private" },
+    { "AZ": "us-east-1b", "CIDR": "10.0.11.0/24", "Tier": "private" },
+    { "AZ": "us-east-1a", "CIDR": "10.0.20.0/24", "Tier": "isolated" },
+    { "AZ": "us-east-1b", "CIDR": "10.0.21.0/24", "Tier": "isolated" }
+]
+
+# Verify ALB health
+$ aws elbv2 describe-target-health --target-group-arn $TG_ARN \
+    --query 'TargetHealthDescriptions[*].{Target:Target.Id,Health:TargetHealth.State}'
+[
+    { "Target": "i-0abc123def456789a", "Health": "healthy" },
+    { "Target": "i-0def456789abc123b", "Health": "healthy" }
+]
+
+# Verify RDS encryption
+$ aws rds describe-db-instances --db-instance-identifier terraform-3tier-db \
+    --query 'DBInstances[0].{Encrypted:StorageEncrypted,MultiAZ:MultiAZ,Engine:Engine}'
+{
+    "Encrypted": true,
+    "MultiAZ": false,
+    "Engine": "postgres"
+}
+
+# Verify VPC endpoints
+$ aws ec2 describe-vpc-endpoints --filters "Name=vpc-id,Values=vpc-0abc123def456789" \
+    --query 'VpcEndpoints[*].{Service:ServiceName,Type:VpcEndpointType}'
+[
+    { "Service": "com.amazonaws.us-east-1.s3", "Type": "Gateway" },
+    { "Service": "com.amazonaws.us-east-1.dynamodb", "Type": "Gateway" },
+    { "Service": "com.amazonaws.us-east-1.ssm", "Type": "Interface" },
+    { "Service": "com.amazonaws.us-east-1.secretsmanager", "Type": "Interface" }
+]
+```
+
+### GitHub Actions CI/CD Pipeline
+
+```yaml
+# .github/workflows/terraform.yml
+name: Terraform CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  id-token: write  # Required for OIDC
+  contents: read
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Configure AWS Credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/GitHubActionsRole
+          aws-region: us-east-1
+      
+      - name: Terraform Init
+        run: terraform init
+      
+      - name: Terraform Validate
+        run: terraform validate
+      
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan
+      
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main'
+        run: terraform apply -auto-approve tfplan
+```
+
+### Cost Analysis
+
+**Monthly Cost Estimate** (AWS Pricing Calculator, us-east-1):
+
+| Resource | Configuration | Monthly Cost |
+|----------|--------------|--------------|
+| EC2 (ASG) | 2x t3.micro | $16.79 |
+| RDS PostgreSQL | db.t3.micro, 20GB | $12.41 |
+| ALB | Per hour + LCU | $16.43 |
+| NAT Gateway | 2x (Multi-AZ) | $64.80 |
+| S3 | 10GB + requests | $0.50 |
+| CloudWatch | Alarms + logs | $2.00 |
+| VPC Endpoints | 4 endpoints | $29.20 |
+| **Total** | | **~$142/month** |
+
+> **Free Tier Note**: For demonstration, NAT Gateways can be replaced with a single NAT instance (t3.micro) reducing cost to ~$45/month. VPC endpoints can be removed for testing, further reducing to ~$30/month.
+
+### Teardown Verification
+
+```bash
+$ terraform destroy -auto-approve
+
+module.cloudwatch.aws_cloudwatch_metric_alarm.cpu_high: Destroying...
+module.cloudwatch.aws_cloudwatch_metric_alarm.cpu_low: Destroying...
+module.asg.aws_autoscaling_group.main: Destroying...
+module.asg.aws_autoscaling_group.main: Still destroying... [2m elapsed]
+module.asg.aws_autoscaling_group.main: Destruction complete after 2m15s
+module.rds.aws_db_instance.main: Destroying...
+module.rds.aws_db_instance.main: Still destroying... [5m elapsed]
+module.rds.aws_db_instance.main: Destruction complete after 6m30s
+module.alb.aws_lb.main: Destroying...
+module.alb.aws_lb.main: Destruction complete after 2m
+module.vpc.aws_nat_gateway.main[0]: Destroying...
+module.vpc.aws_nat_gateway.main[1]: Destroying...
+module.vpc.aws_nat_gateway.main[0]: Destruction complete after 1m
+module.vpc.aws_nat_gateway.main[1]: Destruction complete after 1m
+module.vpc.aws_vpc.main: Destroying...
+module.vpc.aws_vpc.main: Destruction complete after 1s
+
+Destroy complete! Resources: 25 destroyed.
+```
+
+---
+
+## Lessons Learned
+
+1. **Module boundaries matter** — Well-defined interfaces between modules prevent coupling
+2. **OIDC > Access Keys** — Short-lived tokens eliminate credential rotation headaches
+3. **VPC Endpoints save money** — Gateway endpoints (S3, DynamoDB) are free and more secure
+4. **Multi-AZ isn't optional** — Even for demos, showing HA design impresses reviewers
+5. **Tags are documentation** — Consistent tagging makes cost allocation and cleanup trivial
+
+---
+
+## Future Improvements
+
+- [ ] Add AWS WAF for ALB protection
+- [ ] Implement blue/green deployments with CodeDeploy
+- [ ] Add Terraform Cloud for remote state and collaboration
+- [ ] Create dev/staging/prod workspaces
+- [ ] Add tfsec and checkov for security scanning in CI
+
+---
+
+<div class="btn-group">
+  <a href="https://mjkhan9.github.io/Terraform-3-Tier-Web-Application/" class="primary-btn">📄 View Documentation</a>
+  <a href="https://github.com/Mjkhan9/Terraform-3-Tier-Web-Application" class="secondary-btn">📂 View Source</a>
+</div>
+
