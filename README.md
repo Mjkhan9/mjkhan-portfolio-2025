@@ -36,6 +36,10 @@ Hybrid identity management reducing provisioning time by 67%.
 Interactive IT operations training with 25+ scripts.  
 *JavaScript, HTML5, CSS3*
 
+**[MFA Incident Response Simulator](https://github.com/Mjkhan9/aws-mfa-incident-simulator)**  
+Dual-mode incident detection for MFA failures with documented runbooks.  
+*CloudTrail, EventBridge, Lambda, DynamoDB, Terraform*
+
 ---
 
 ## Tech Stack
