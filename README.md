@@ -21,7 +21,7 @@ AWS-certified Cloud & Identity Engineer with experience supporting infrastructur
 ## Featured Projects
 
 **[Terraform 3-Tier Web App](https://mjkhan9.github.io/Terraform-3-Tier-Web-Application/)**  
-Production-grade AWS infrastructure with 10 Terraform modules, CI/CD, and security scanning.  
+Production-grade AWS infrastructure with 11 Terraform modules, CI/CD, and security scanning.  
 *Terraform, AWS, GitHub Actions*
 
 **[AWS Student Data Infrastructure](https://mjkhan9.github.io/aws-student-data-infrastructure/)**  
@@ -29,11 +29,11 @@ Secure 3-tier VPC with attack simulator for FERPA compliance.
 *AWS, Python, Boto3*
 
 **[IAM Lifecycle Automation](https://mjkhan9.github.io/Automated-IAM-User-Lifecycle-Management-System-Project/)**  
-Hybrid identity management reducing provisioning time by 67%.  
-*Flask, PowerShell, Active Directory*
+Hybrid identity management automating user provisioning from hours to minutes.  
+*Python, PowerShell, Active Directory*
 
 **[IT Support Ticket Simulator](https://mjkhan9.github.io/IT-Simulator-Project/)**  
-Interactive IT operations training with 25+ scripts.  
+Interactive IT operations training with simulated PowerShell automation workflows.  
 *JavaScript, HTML5, CSS3*
 
 **[MFA Incident Response Simulator](https://github.com/Mjkhan9/aws-mfa-incident-simulator)**  
