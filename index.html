@@ -347,54 +347,43 @@
             border-radius: 12px;
             padding: 24px;
             cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
-            min-height: 180px;
-            perspective: 1000px;
-        }
-
-        .skill-card.expanded {
-            min-height: auto;
-        }
-
-        .skill-card-inner {
-            position: relative;
-            width: 100%;
-            transition: transform 0.4s ease;
-            transform-style: preserve-3d;
-        }
-
-        .skill-card.flipped .skill-card-inner {
-            transform: rotateY(180deg);
-        }
-
-        .skill-card-front,
-        .skill-card-back {
-            position: relative;
-            width: 100%;
-            backface-visibility: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .skill-card-front {
-            min-height: 180px;
-            justify-content: center;
-        }
-
-        .skill-card-back {
-            transform: rotateY(180deg);
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            padding: 24px;
-            margin: -24px;
+            transition: all 0.3s ease;
+            overflow: hidden;
         }
 
         .skill-card:hover {
             border-color: var(--accent);
             box-shadow: var(--shadow-md);
+        }
+
+        .skill-card-front {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .skill-card-expanded {
+            display: none;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+            animation: slideDown 0.3s ease;
+        }
+
+        .skill-card.expanded .skill-card-expanded {
+            display: block;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .skill-icon {
@@ -406,52 +395,53 @@
             font-size: 16px;
             font-weight: 600;
             color: var(--text);
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .skill-category {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text-muted);
         }
 
         .skill-description {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text);
-            line-height: 1.5;
-            margin-bottom: 10px;
+            line-height: 1.4;
+            margin-bottom: 8px;
         }
 
         .skill-usage {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-muted);
-            line-height: 1.4;
-            margin-bottom: 10px;
+            line-height: 1.3;
+            margin-bottom: 8px;
         }
 
         .skill-usage strong {
             color: var(--text);
             font-weight: 600;
+            font-size: 11px;
         }
 
         .skill-examples {
-            margin-top: 10px;
-            padding-top: 10px;
+            margin-top: 8px;
+            padding-top: 8px;
             border-top: 1px solid var(--border);
         }
 
         .skill-examples-title {
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 600;
             color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
 
         .skill-examples-list {
-            font-size: 11px;
+            font-size: 10px;
             color: var(--text-muted);
-            line-height: 1.4;
+            line-height: 1.3;
         }
 
         /* Additional Projects */
@@ -765,217 +755,154 @@
             </div>
             <div class="skills-grid">
                 <!-- AWS -->
-                <div class="skill-card" onclick="this.classList.toggle('flipped')">
-                    <div class="skill-card-inner">
-                        <div class="skill-card-front">
-                            <div class="skill-icon">☁️</div>
-                            <div class="skill-name">AWS</div>
-                            <div class="skill-category">Cloud Infrastructure</div>
-                        </div>
-                        <div class="skill-card-back">
-                            <div class="skill-name">AWS</div>
-                            <div class="skill-description">
-                                Cloud infrastructure and services for identity management, monitoring, and automation.
-                            </div>
-                            <div class="skill-usage">
-                                <strong>How I use it:</strong> Deploy IAM automation pipelines, configure CloudTrail for audit logging, set up EventBridge for event-driven workflows, and manage VPC infrastructure for secure network isolation.
-                            </div>
-                            <div class="skill-examples">
-                                <div class="skill-examples-title">In My Projects:</div>
-                                <div class="skill-examples-list">MFA Incident Simulator (CloudTrail, EventBridge, Lambda), IAM Lifecycle System (IAM, Secrets Manager, SNS), Student Data Infrastructure (VPC, CloudTrail, GuardDuty)</div>
-                            </div>
+                <div class="skill-card" onclick="this.classList.toggle('expanded')">
+                    <div class="skill-card-front">
+                        <div class="skill-icon">☁️</div>
+                        <div class="skill-name">AWS</div>
+                        <div class="skill-category">Cloud Infrastructure</div>
+                    </div>
+                    <div class="skill-card-expanded">
+                        <div class="skill-description">Cloud infrastructure for identity, monitoring, and automation.</div>
+                        <div class="skill-usage"><strong>Use:</strong> IAM pipelines, CloudTrail logging, EventBridge workflows, VPC isolation.</div>
+                        <div class="skill-examples">
+                            <div class="skill-examples-title">Projects:</div>
+                            <div class="skill-examples-list">MFA Simulator, IAM Lifecycle, Student Data Infrastructure</div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Active Directory -->
-                <div class="skill-card" onclick="this.classList.toggle('flipped')">
-                    <div class="skill-card-inner">
-                        <div class="skill-card-front">
-                            <div class="skill-icon">📁</div>
-                            <div class="skill-name">Active Directory</div>
-                            <div class="skill-category">Identity Management</div>
-                        </div>
-                        <div class="skill-card-back">
-                            <div class="skill-name">Active Directory</div>
-                            <div class="skill-description">
-                                On-premises directory services for user management, group membership, and access control.
-                            </div>
-                            <div class="skill-usage">
-                                <strong>How I use it:</strong> PowerShell scripts automate user provisioning, OU placement, security group assignment, and account lifecycle management. Daily operations include investigating authentication failures and managing access for 8,000+ users.
-                            </div>
-                            <div class="skill-examples">
-                                <div class="skill-examples-title">In My Work:</div>
-                                <div class="skill-examples-list">Hybrid IAM project (AD provisioning automation), Daily ops (user creation, group management, MFA troubleshooting), Incident response (account lockouts, access denials)</div>
-                            </div>
+                <div class="skill-card" onclick="this.classList.toggle('expanded')">
+                    <div class="skill-card-front">
+                        <div class="skill-icon">📁</div>
+                        <div class="skill-name">Active Directory</div>
+                        <div class="skill-category">Identity Management</div>
+                    </div>
+                    <div class="skill-card-expanded">
+                        <div class="skill-description">On-premises directory for user management and access control.</div>
+                        <div class="skill-usage"><strong>Use:</strong> PowerShell automation for provisioning, OU placement, group assignment. Daily ops: 8,000+ users, MFA troubleshooting, incident response.</div>
+                        <div class="skill-examples">
+                            <div class="skill-examples-title">Work:</div>
+                            <div class="skill-examples-list">Hybrid IAM project, daily user ops, incident response</div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Python -->
-                <div class="skill-card" onclick="this.classList.toggle('flipped')">
-                    <div class="skill-card-inner">
-                        <div class="skill-card-front">
-                            <div class="skill-icon">🐍</div>
-                            <div class="skill-name">Python</div>
-                            <div class="skill-category">Automation</div>
-                        </div>
-                        <div class="skill-card-back">
-                            <div class="skill-name">Python</div>
-                            <div class="skill-description">
-                                Scripting and automation for AWS IAM operations, incident processing, and infrastructure management.
-                            </div>
-                            <div class="skill-usage">
-                                <strong>How I use it:</strong> Boto3 for AWS API interactions, Lambda functions for event-driven processing, error handling and retry logic for production reliability, and structured logging for audit trails.
-                            </div>
-                            <div class="skill-examples">
-                                <div class="skill-examples-title">In My Projects:</div>
-                                <div class="skill-examples-list">IAM Lifecycle System (user provisioning automation), MFA Simulator (Lambda incident handlers), Student Data Infrastructure (IAM provisioning scripts)</div>
-                            </div>
+                <div class="skill-card" onclick="this.classList.toggle('expanded')">
+                    <div class="skill-card-front">
+                        <div class="skill-icon">🐍</div>
+                        <div class="skill-name">Python</div>
+                        <div class="skill-category">Automation</div>
+                    </div>
+                    <div class="skill-card-expanded">
+                        <div class="skill-description">Scripting for AWS IAM operations and incident processing.</div>
+                        <div class="skill-usage"><strong>Use:</strong> Boto3 for AWS APIs, Lambda for event processing, error handling, structured logging.</div>
+                        <div class="skill-examples">
+                            <div class="skill-examples-title">Projects:</div>
+                            <div class="skill-examples-list">IAM Lifecycle System, MFA Simulator, Student Data Infrastructure</div>
                         </div>
                     </div>
                 </div>
 
                 <!-- PowerShell -->
-                <div class="skill-card" onclick="this.classList.toggle('flipped')">
-                    <div class="skill-card-inner">
-                        <div class="skill-card-front">
-                            <div class="skill-icon">⚡</div>
-                            <div class="skill-name">PowerShell</div>
-                            <div class="skill-category">Windows Automation</div>
-                        </div>
-                        <div class="skill-card-back">
-                            <div class="skill-name">PowerShell</div>
-                            <div class="skill-description">
-                                Automation for Active Directory operations, Windows system management, and hybrid identity workflows.
-                            </div>
-                            <div class="skill-usage">
-                                <strong>How I use it:</strong> Active Directory cmdlets for user provisioning, group membership management, and account lifecycle operations. Daily use for automating repetitive IAM tasks and improving turnaround time while preserving audit controls.
-                            </div>
-                            <div class="skill-examples">
-                                <div class="skill-examples-title">In My Work:</div>
-                                <div class="skill-examples-list">Hybrid IAM project (AD automation scripts), Daily ops (access changes, MFA requests, group updates), Incident response (account unlocks, password resets)</div>
-                            </div>
+                <div class="skill-card" onclick="this.classList.toggle('expanded')">
+                    <div class="skill-card-front">
+                        <div class="skill-icon">⚡</div>
+                        <div class="skill-name">PowerShell</div>
+                        <div class="skill-category">Windows Automation</div>
+                    </div>
+                    <div class="skill-card-expanded">
+                        <div class="skill-description">Automation for AD operations and hybrid identity workflows.</div>
+                        <div class="skill-usage"><strong>Use:</strong> AD cmdlets for provisioning, group management, lifecycle ops. Daily automation for IAM tasks with audit controls.</div>
+                        <div class="skill-examples">
+                            <div class="skill-examples-title">Work:</div>
+                            <div class="skill-examples-list">Hybrid IAM project, daily ops automation, incident response</div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Terraform -->
-                <div class="skill-card" onclick="this.classList.toggle('flipped')">
-                    <div class="skill-card-inner">
-                        <div class="skill-card-front">
-                            <div class="skill-icon">🔧</div>
-                            <div class="skill-name">Terraform</div>
-                            <div class="skill-category">Infrastructure as Code</div>
-                        </div>
-                        <div class="skill-card-back">
-                            <div class="skill-name">Terraform</div>
-                            <div class="skill-description">
-                                Infrastructure as Code for provisioning AWS resources, managing configurations, and ensuring reproducibility.
-                            </div>
-                            <div class="skill-usage">
-                                <strong>How I use it:</strong> Modular architecture with reusable modules, state management for infrastructure tracking, and CI/CD integration for automated validation and security scanning.
-                            </div>
-                            <div class="skill-examples">
-                                <div class="skill-examples-title">In My Projects:</div>
-                                <div class="skill-examples-list">MFA Simulator (Lambda, DynamoDB, EventBridge infrastructure), Student Data Infrastructure (VPC, security groups, CloudTrail), 3-Tier Web App (11-module production architecture)</div>
-                            </div>
+                <div class="skill-card" onclick="this.classList.toggle('expanded')">
+                    <div class="skill-card-front">
+                        <div class="skill-icon">🔧</div>
+                        <div class="skill-name">Terraform</div>
+                        <div class="skill-category">Infrastructure as Code</div>
+                    </div>
+                    <div class="skill-card-expanded">
+                        <div class="skill-description">IaC for AWS resource provisioning and configuration management.</div>
+                        <div class="skill-usage"><strong>Use:</strong> Modular architecture, reusable modules, state management, CI/CD integration with security scanning.</div>
+                        <div class="skill-examples">
+                            <div class="skill-examples-title">Projects:</div>
+                            <div class="skill-examples-list">MFA Simulator, Student Data Infrastructure, 3-Tier Web App</div>
                         </div>
                     </div>
                 </div>
 
                 <!-- CloudTrail -->
-                <div class="skill-card" onclick="this.classList.toggle('flipped')">
-                    <div class="skill-card-inner">
-                        <div class="skill-card-front">
-                            <div class="skill-icon">📊</div>
-                            <div class="skill-name">CloudTrail</div>
-                            <div class="skill-category">Audit & Monitoring</div>
-                        </div>
-                        <div class="skill-card-back">
-                            <div class="skill-name">CloudTrail</div>
-                            <div class="skill-description">
-                                AWS API audit logging for security analysis, compliance, and incident investigation.
-                            </div>
-                            <div class="skill-usage">
-                                <strong>How I use it:</strong> Multi-region trail configuration, S3 log storage with encryption, CloudWatch integration for real-time alerting, and CloudWatch Insights queries for post-hoc analysis of authentication events.
-                            </div>
-                            <div class="skill-examples">
-                                <div class="skill-examples-title">In My Projects:</div>
-                                <div class="skill-examples-list">MFA Simulator (ConsoleLogin event detection), Student Data Infrastructure (API audit logging), IAM Lifecycle System (provisioning audit trails)</div>
-                            </div>
+                <div class="skill-card" onclick="this.classList.toggle('expanded')">
+                    <div class="skill-card-front">
+                        <div class="skill-icon">📊</div>
+                        <div class="skill-name">CloudTrail</div>
+                        <div class="skill-category">Audit & Monitoring</div>
+                    </div>
+                    <div class="skill-card-expanded">
+                        <div class="skill-description">AWS API audit logging for security and compliance.</div>
+                        <div class="skill-usage"><strong>Use:</strong> Multi-region trails, encrypted S3 storage, CloudWatch alerts, Insights queries for auth event analysis.</div>
+                        <div class="skill-examples">
+                            <div class="skill-examples-title">Projects:</div>
+                            <div class="skill-examples-list">MFA Simulator, Student Data Infrastructure, IAM Lifecycle System</div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Entra ID -->
-                <div class="skill-card" onclick="this.classList.toggle('flipped')">
-                    <div class="skill-card-inner">
-                        <div class="skill-card-front">
-                            <div class="skill-icon">🔐</div>
-                            <div class="skill-name">Entra ID</div>
-                            <div class="skill-category">Cloud Identity</div>
-                        </div>
-                        <div class="skill-card-back">
-                            <div class="skill-name">Entra ID</div>
-                            <div class="skill-description">
-                                Microsoft's cloud identity platform for user management, SSO, MFA, and conditional access policies.
-                            </div>
-                            <div class="skill-usage">
-                                <strong>How I use it:</strong> Daily operations managing 8,000+ users, investigating MFA authentication failures, configuring conditional access policies, troubleshooting SSO issues, and managing hybrid identity synchronization.
-                            </div>
-                            <div class="skill-examples">
-                                <div class="skill-examples-title">In My Work:</div>
-                                <div class="skill-examples-list">Daily ops (user provisioning, MFA troubleshooting, access management), Incident response (authentication failures, access denials), Compliance (FERPA/HIPAA access controls)</div>
-                            </div>
+                <div class="skill-card" onclick="this.classList.toggle('expanded')">
+                    <div class="skill-card-front">
+                        <div class="skill-icon">🔐</div>
+                        <div class="skill-name">Entra ID</div>
+                        <div class="skill-category">Cloud Identity</div>
+                    </div>
+                    <div class="skill-card-expanded">
+                        <div class="skill-description">Microsoft cloud identity platform for SSO, MFA, and conditional access.</div>
+                        <div class="skill-usage"><strong>Use:</strong> Daily ops: 8,000+ users, MFA failure investigation, conditional access policies, SSO troubleshooting, hybrid sync.</div>
+                        <div class="skill-examples">
+                            <div class="skill-examples-title">Work:</div>
+                            <div class="skill-examples-list">Daily user ops, incident response, FERPA/HIPAA compliance</div>
                         </div>
                     </div>
                 </div>
 
                 <!-- EventBridge -->
-                <div class="skill-card" onclick="this.classList.toggle('flipped')">
-                    <div class="skill-card-inner">
-                        <div class="skill-card-front">
-                            <div class="skill-icon">🔄</div>
-                            <div class="skill-name">EventBridge</div>
-                            <div class="skill-category">Event-Driven</div>
-                        </div>
-                        <div class="skill-card-back">
-                            <div class="skill-name">EventBridge</div>
-                            <div class="skill-description">
-                                Serverless event bus for building event-driven architectures and real-time event processing.
-                            </div>
-                            <div class="skill-usage">
-                                <strong>How I use it:</strong> Rules to capture CloudTrail events, route authentication failures to Lambda functions, and enable real-time incident detection without polling.
-                            </div>
-                            <div class="skill-examples">
-                                <div class="skill-examples-title">In My Projects:</div>
-                                <div class="skill-examples-list">MFA Simulator (ConsoleLogin event routing, real-time detection), Event-driven architecture (decoupled Lambda processing)</div>
-                            </div>
+                <div class="skill-card" onclick="this.classList.toggle('expanded')">
+                    <div class="skill-card-front">
+                        <div class="skill-icon">🔄</div>
+                        <div class="skill-name">EventBridge</div>
+                        <div class="skill-category">Event-Driven</div>
+                    </div>
+                    <div class="skill-card-expanded">
+                        <div class="skill-description">Serverless event bus for event-driven architectures.</div>
+                        <div class="skill-usage"><strong>Use:</strong> Rules to capture CloudTrail events, route auth failures to Lambda, real-time incident detection.</div>
+                        <div class="skill-examples">
+                            <div class="skill-examples-title">Projects:</div>
+                            <div class="skill-examples-list">MFA Simulator (event routing, real-time detection)</div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Lambda -->
-                <div class="skill-card" onclick="this.classList.toggle('flipped')">
-                    <div class="skill-card-inner">
-                        <div class="skill-card-front">
-                            <div class="skill-icon">⚡</div>
-                            <div class="skill-name">Lambda</div>
-                            <div class="skill-category">Serverless</div>
-                        </div>
-                        <div class="skill-card-back">
-                            <div class="skill-name">Lambda</div>
-                            <div class="skill-description">
-                                Serverless compute for event-driven processing, automation, and microservice architectures.
-                            </div>
-                            <div class="skill-usage">
-                                <strong>How I use it:</strong> Python handlers for incident processing, dual-mode operation (detector + simulator), DynamoDB integration for state management, and error handling for production reliability.
-                            </div>
-                            <div class="skill-examples">
-                                <div class="skill-examples-title">In My Projects:</div>
-                                <div class="skill-examples-list">MFA Simulator (incident detection and processing), Event-driven workflows (EventBridge → Lambda → DynamoDB)</div>
-                            </div>
+                <div class="skill-card" onclick="this.classList.toggle('expanded')">
+                    <div class="skill-card-front">
+                        <div class="skill-icon">⚡</div>
+                        <div class="skill-name">Lambda</div>
+                        <div class="skill-category">Serverless</div>
+                    </div>
+                    <div class="skill-card-expanded">
+                        <div class="skill-description">Serverless compute for event-driven processing and automation.</div>
+                        <div class="skill-usage"><strong>Use:</strong> Python handlers for incidents, dual-mode (detector + simulator), DynamoDB integration, error handling.</div>
+                        <div class="skill-examples">
+                            <div class="skill-examples-title">Projects:</div>
+                            <div class="skill-examples-list">MFA Simulator (incident processing), Event-driven workflows</div>
                         </div>
                     </div>
                 </div>
