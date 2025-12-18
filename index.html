@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mohammad Khan | Cloud & IAM Engineer</title>
-    <meta name="description" content="AWS Solutions Architect specializing in cloud infrastructure and Identity Access Management">
+    <title>Mohammad Khan | Identity & Cloud Operations</title>
+    <meta name="description" content="Cloud IAM & Security professional specializing in identity operations, incident response, and infrastructure automation">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -16,378 +16,515 @@
         }
 
         :root {
-            --bg: #1a1a2e;
-            --card: #25253a;
-            --border: #3a3a52;
-            --text: #f1f1f4;
-            --muted: #9898a8;
-            --accent: #818cf8;
-            --accent-2: #a78bfa;
+            --bg: #fafafa;
+            --surface: #ffffff;
+            --border: #e5e7eb;
+            --text: #1f2937;
+            --text-muted: #6b7280;
+            --text-light: #9ca3af;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --accent-light: #dbeafe;
+            --success: #059669;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         }
 
         body {
-            font-family: 'Inter', system-ui, sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
             background: var(--bg);
             color: var(--text);
-            line-height: 1.5;
-            min-height: 100vh;
+            line-height: 1.6;
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
         }
 
         .container {
-            max-width: 1100px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 0 24px;
         }
 
         /* Header */
         header {
-            padding: 20px 0;
+            background: var(--surface);
             border-bottom: 1px solid var(--border);
             position: sticky;
             top: 0;
-            background: rgba(26, 26, 46, 0.95);
-            backdrop-filter: blur(10px);
             z-index: 100;
+            box-shadow: var(--shadow-sm);
         }
 
         .header-inner {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 20px 0;
         }
 
         .logo {
-            font-weight: 700;
-            font-size: 1.1rem;
+            font-weight: 600;
+            font-size: 18px;
+            color: var(--text);
+            letter-spacing: -0.5px;
         }
 
-        .nav-links {
+        nav {
             display: flex;
             gap: 32px;
-            list-style: none;
+            align-items: center;
         }
 
-        .nav-links a {
-            color: var(--muted);
+        nav a {
+            color: var(--text-muted);
             text-decoration: none;
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 500;
             transition: color 0.2s;
         }
 
-        .nav-links a:hover {
+        nav a:hover {
             color: var(--text);
         }
 
-        .header-btn {
+        .resume-btn {
             background: var(--accent);
             color: white;
-            padding: 8px 16px;
+            padding: 10px 20px;
             border-radius: 6px;
             text-decoration: none;
             font-size: 14px;
             font-weight: 600;
-            transition: all 0.2s;
+            transition: background 0.2s;
         }
 
-        .header-btn:hover {
-            background: var(--accent-2);
+        .resume-btn:hover {
+            background: var(--accent-hover);
         }
 
         @media (max-width: 768px) {
-            .nav-links { display: none; }
+            nav a:not(.resume-btn) { display: none; }
         }
 
-        /* Hero */
+        /* Hero / About Section */
         .hero {
             padding: 80px 0 60px;
-            text-align: center;
+            background: var(--surface);
         }
 
-        .hero-badges {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
+        .hero-content {
+            max-width: 800px;
+        }
+
+        .hero-greeting {
+            color: var(--accent);
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 16px;
+        }
+
+        .hero-name {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            line-height: 1.1;
             margin-bottom: 24px;
-        }
-
-        .aws-badge {
-            width: 72px;
-            height: 72px;
-            border-radius: 12px;
-            overflow: hidden;
-            background: var(--card);
-            border: 1px solid var(--border);
-        }
-
-        .aws-badge img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            padding: 6px;
-        }
-
-        .hero h1 {
-            font-size: clamp(2rem, 5vw, 3rem);
-            font-weight: 800;
-            margin-bottom: 12px;
-        }
-
-        .hero h1 span {
-            background: linear-gradient(135deg, var(--accent), var(--accent-2));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--text);
+            letter-spacing: -1px;
         }
 
         .hero-tagline {
-            color: var(--muted);
-            font-size: 1.1rem;
-            max-width: 600px;
-            margin: 0 auto 32px;
-        }
-
-        .hero-stats {
-            display: flex;
-            justify-content: center;
-            gap: 48px;
-            flex-wrap: wrap;
-        }
-
-        .stat {
-            text-align: center;
-        }
-
-        .stat-value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--accent);
-        }
-
-        .stat-label {
-            font-size: 13px;
-            color: var(--muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        /* Projects */
-        .section {
-            padding: 60px 0;
-        }
-
-        .section-title {
-            font-size: 1.5rem;
-            font-weight: 700;
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: 600;
+            color: var(--text-muted);
             margin-bottom: 32px;
-            text-align: center;
+            line-height: 1.3;
         }
 
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
+        .hero-description {
+            font-size: 18px;
+            color: var(--text-muted);
+            line-height: 1.7;
+            margin-bottom: 24px;
         }
 
-        @media (max-width: 768px) {
-            .projects-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .project-card {
-            background: var(--card);
+        .hero-details {
+            background: var(--bg);
             border: 1px solid var(--border);
             border-radius: 12px;
-            padding: 24px;
-            transition: all 0.2s;
-            display: flex;
-            flex-direction: column;
+            padding: 32px;
+            margin-top: 40px;
         }
 
-        .project-card:hover {
-            border-color: var(--accent);
-            transform: translateY(-2px);
+        .hero-details h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text);
         }
 
-        .project-icon {
-            font-size: 32px;
-            margin-bottom: 16px;
+        .detail-item {
+            margin-bottom: 24px;
         }
 
-        .project-title {
-            font-size: 1.1rem;
-            font-weight: 700;
+        .detail-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .detail-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
             margin-bottom: 8px;
         }
 
-        .project-desc {
-            color: var(--muted);
+        .detail-text {
+            font-size: 16px;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* Main Projects Section */
+        .main-projects {
+            padding: 80px 0;
+            background: var(--bg);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-label {
             font-size: 14px;
-            margin-bottom: 16px;
-            flex: 1;
-        }
-
-        .project-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-bottom: 16px;
-        }
-
-        .tag {
-            background: rgba(99, 102, 241, 0.1);
+            font-weight: 600;
             color: var(--accent);
-            padding: 4px 10px;
-            border-radius: 4px;
-            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 4vw, 2.5rem);
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 16px;
+        }
+
+        .section-subtitle {
+            font-size: 18px;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .projects-featured {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .project-featured {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 48px;
+            transition: all 0.3s;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .project-featured:hover {
+            box-shadow: var(--shadow-lg);
+            border-color: var(--accent);
+        }
+
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 24px;
+            gap: 24px;
+        }
+
+        .project-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+
+        .project-subtitle {
+            font-size: 16px;
+            color: var(--text-muted);
             font-weight: 500;
         }
 
         .project-link {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            background: var(--bg);
-            border: 1px solid var(--border);
-            color: var(--text);
-            padding: 12px;
-            border-radius: 8px;
+            color: var(--accent);
             text-decoration: none;
-            font-size: 14px;
             font-weight: 600;
-            transition: all 0.2s;
+            font-size: 15px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: gap 0.2s;
         }
 
         .project-link:hover {
-            background: var(--accent);
-            border-color: var(--accent);
+            gap: 10px;
         }
 
-        .project-link svg {
-            transition: transform 0.2s;
+        .project-description {
+            font-size: 17px;
+            color: var(--text);
+            line-height: 1.7;
+            margin-bottom: 32px;
         }
 
-        .project-link:hover svg {
-            transform: translateX(4px);
+        .project-highlights {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
         }
 
-        /* Skills */
+        .highlight {
+            padding: 20px;
+            background: var(--bg);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .highlight-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .highlight-text {
+            font-size: 15px;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .project-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 24px;
+        }
+
+        .tech-tag {
+            background: var(--accent-light);
+            color: var(--accent);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        /* Skills Section */
+        .skills-section {
+            padding: 80px 0;
+            background: var(--surface);
+        }
+
         .skills-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
-        }
-
-        @media (max-width: 768px) {
-            .skills-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
         }
 
         .skill-card {
-            background: var(--card);
+            background: var(--bg);
             border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 20px;
-            text-align: center;
+            border-radius: 12px;
+            padding: 24px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            height: 180px;
+            perspective: 1000px;
+        }
+
+        .skill-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .skill-card.flipped .skill-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .skill-card-front,
+        .skill-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .skill-card-back {
+            transform: rotateY(180deg);
+        }
+
+        .skill-card:hover {
+            border-color: var(--accent);
+            box-shadow: var(--shadow-md);
         }
 
         .skill-icon {
-            font-size: 28px;
-            margin-bottom: 8px;
+            font-size: 32px;
+            margin-bottom: 12px;
         }
 
         .skill-name {
-            font-size: 14px;
+            font-size: 16px;
             font-weight: 600;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+
+        .skill-category {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .skill-description {
+            font-size: 14px;
+            color: var(--text);
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .skill-usage {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .skill-examples {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        .skill-examples-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .skill-examples-list {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* Additional Projects */
+        .additional-projects {
+            padding: 80px 0;
+            background: var(--bg);
+        }
+
+        .projects-minimal {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .project-minimal {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            transition: all 0.2s;
+        }
+
+        .project-minimal:hover {
+            border-color: var(--accent);
+            box-shadow: var(--shadow-md);
+        }
+
+        .project-minimal-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 12px;
+        }
+
+        .project-minimal-desc {
+            font-size: 15px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .project-minimal-link {
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .project-minimal-link:hover {
+            text-decoration: underline;
         }
 
         /* Contact */
         .contact-section {
-            background: var(--card);
+            padding: 80px 0;
+            background: var(--surface);
             border-top: 1px solid var(--border);
-            padding: 60px 0;
         }
 
-        .contact-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-            margin-bottom: 40px;
-        }
-
-        @media (max-width: 768px) {
-            .contact-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        .contact-item {
+        .contact-content {
             text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
-        .contact-icon {
-            font-size: 24px;
-            margin-bottom: 8px;
+        .contact-text {
+            font-size: 18px;
+            color: var(--text-muted);
+            margin-bottom: 32px;
+            line-height: 1.7;
         }
 
-        .contact-label {
-            font-size: 12px;
-            color: var(--muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 4px;
-        }
-
-        .contact-value {
-            color: var(--text);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 14px;
-        }
-
-        .contact-value:hover {
-            color: var(--accent);
-        }
-
-        .cta-box {
-            text-align: center;
-            padding: 32px;
-            background: var(--bg);
-            border-radius: 12px;
-        }
-
-        .cta-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .cta-desc {
-            color: var(--muted);
-            margin-bottom: 20px;
-            font-size: 14px;
-        }
-
-        .cta-buttons {
+        .contact-buttons {
             display: flex;
-            gap: 12px;
+            gap: 16px;
             justify-content: center;
             flex-wrap: wrap;
         }
 
         .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.2s;
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.2s;
         }
 
         .btn-primary {
@@ -396,13 +533,13 @@
         }
 
         .btn-primary:hover {
-            background: var(--accent-2);
+            background: var(--accent-hover);
         }
 
         .btn-outline {
             background: transparent;
             color: var(--text);
-            border: 1px solid var(--border);
+            border: 2px solid var(--border);
         }
 
         .btn-outline:hover {
@@ -412,19 +549,42 @@
 
         /* Footer */
         footer {
-            padding: 24px 0;
+            padding: 40px 0;
             border-top: 1px solid var(--border);
             text-align: center;
+            background: var(--bg);
         }
 
         .footer-text {
-            color: var(--muted);
-            font-size: 13px;
+            color: var(--text-muted);
+            font-size: 14px;
         }
 
         .footer-text a {
             color: var(--accent);
             text-decoration: none;
+        }
+
+        .footer-text a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .project-featured {
+                padding: 32px 24px;
+            }
+
+            .project-header {
+                flex-direction: column;
+            }
+
+            .project-highlights {
+                grid-template-columns: 1fr;
+            }
+
+            .skills-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
         }
     </style>
 </head>
@@ -434,228 +594,416 @@
             <div class="header-inner">
                 <div class="logo">Mohammad Khan</div>
                 <nav>
-                    <ul class="nav-links">
-                        <li><a href="#projects">Projects</a></li>
-                        <li><a href="#skills">Skills</a></li>
-                        <li><a href="#contact">Contact</a></li>
-                    </ul>
+                    <a href="#about">About</a>
+                    <a href="#projects">Projects</a>
+                    <a href="#skills">Skills</a>
+                    <a href="#contact">Contact</a>
+                    <a href="#" class="resume-btn">Resume</a>
                 </nav>
-                <a href="https://linkedin.com/in/mohammad-jkhan" target="_blank" class="header-btn">Connect</a>
             </div>
         </div>
     </header>
 
-    <main>
-        <!-- Hero -->
-        <section class="hero">
-            <div class="container">
-                <div class="hero-badges">
-                    <a href="https://www.credly.com/badges/your-badge" target="_blank" class="aws-badge" title="AWS Solutions Architect">
-                        <img src="https://images.credly.com/size/340x340/images/0e284c3f-5164-4b21-8660-0d84737941bc/image.png" alt="AWS SA">
-                    </a>
-                    <a href="https://www.credly.com/badges/your-badge" target="_blank" class="aws-badge" title="AWS Cloud Practitioner">
-                        <img src="https://images.credly.com/size/340x340/images/00634f82-b07f-4bbd-a6bb-53de397fc3a6/image.png" alt="AWS CP">
-                    </a>
-                </div>
-                <h1>Cloud & <span>IAM Engineer</span></h1>
-                <p class="hero-tagline">AWS Solutions Architect building secure, scalable infrastructure. Currently managing identity for 8,000+ users at NYC DOE.</p>
-                <div class="hero-stats">
-                    <div class="stat">
-                        <div class="stat-value">8K+</div>
-                        <div class="stat-label">Users Managed</div>
+    <!-- Hero / About Section -->
+    <section id="about" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-greeting">Hi, my name is</div>
+                <h1 class="hero-name">Mohammad Khan.</h1>
+                <h2 class="hero-tagline">I operate identity and cloud systems.</h2>
+                <p class="hero-description">
+                    I'm a Cloud IAM & Security professional specializing in identity operations, incident response, and infrastructure automation. Currently supporting IAM platforms for 8,000+ users at NYC Department of Education, where I investigate authentication failures, manage access across hybrid environments, and automate repetitive operations.
+                </p>
+                <div class="hero-details">
+                    <h3>What I'm Working On</h3>
+                    <div class="detail-item">
+                        <div class="detail-label">Current Focus</div>
+                        <div class="detail-text">
+                            Supporting enterprise IAM platforms (Entra ID, Active Directory, ISIM, RACF) in FERPA/HIPAA-regulated environments. Investigating MFA authentication failures, performing root-cause analysis, and automating IAM operations using PowerShell to improve consistency and turnaround time.
+                        </div>
                     </div>
-                    <div class="stat">
-                        <div class="stat-value">10</div>
-                        <div class="stat-label">Terraform Modules</div>
+                    <div class="detail-item">
+                        <div class="detail-label">Roles I'm Seeking</div>
+                        <div class="detail-text">
+                            IAM Engineer, Cloud Engineer, or DevOps Engineer positions where I can apply my operational experience with identity systems, incident response, and automation. I'm particularly interested in roles that bridge operations and engineering, allowing me to build production-grade solutions while maintaining operational discipline.
+                        </div>
                     </div>
-                    <div class="stat">
-                        <div class="stat-value">2x</div>
-                        <div class="stat-label">AWS Certified</div>
+                    <div class="detail-item">
+                        <div class="detail-label">Career Positioning</div>
+                        <div class="detail-text">
+                            Early-career professional with strong operational foundation in identity and access management. Currently ops-focused with hands-on experience in incident response and access management, actively building engineering capability through production-grade portfolio projects that model authentication failure patterns, assisted remediation workflows, and auditable IAM provisioning.
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">How My Work Fits</div>
+                        <div class="detail-text">
+                            My work sits at the intersection of IAM, cloud operations, and security. I design systems that detect authentication anomalies, automate identity lifecycle management, and ensure audit readiness in regulated environments. My portfolio projects demonstrate event-driven incident detection, hybrid identity automation, and security-first infrastructure design.
+                        </div>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Projects -->
-        <section id="projects" class="section">
-            <div class="container">
-                <h2 class="section-title">Projects</h2>
-                <div class="projects-grid">
-                    <!-- Terraform 3-Tier -->
-                    <div class="project-card">
-                        <div class="project-icon">🏗️</div>
-                        <h3 class="project-title">Terraform 3-Tier Web Application</h3>
-                        <p class="project-desc">Production-grade AWS infrastructure with 10 Terraform modules. Features isolated subnets, VPC endpoints, CI/CD pipeline, and security scanning.</p>
-                        <div class="project-tags">
-                            <span class="tag">Terraform</span>
-                            <span class="tag">AWS</span>
-                            <span class="tag">VPC</span>
-                            <span class="tag">RDS</span>
-                            <span class="tag">GitHub Actions</span>
-                        </div>
-                        <a href="https://mjkhan9.github.io/Terraform-3-Tier-Web-Application/" target="_blank" class="project-link">
-                            View Project
-                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                        </a>
-                    </div>
+    <!-- Main Projects -->
+    <section id="projects" class="main-projects">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label">Featured Work</div>
+                <h2 class="section-title">Engineering Projects</h2>
+                <p class="section-subtitle">Production-grade solutions demonstrating identity operations, incident response, and infrastructure automation</p>
+            </div>
 
-                    <!-- AWS Student Data -->
-                    <div class="project-card">
-                        <div class="project-icon">🔐</div>
-                        <h3 class="project-title">AWS Student Data Infrastructure</h3>
-                        <p class="project-desc">Secure 3-tier VPC with attack simulator for security testing. Automated IAM provisioning and encrypted storage using Python/Boto3.</p>
-                        <div class="project-tags">
-                            <span class="tag">AWS</span>
-                            <span class="tag">Boto3</span>
-                            <span class="tag">Python</span>
-                            <span class="tag">IAM</span>
-                            <span class="tag">VPC</span>
-                        </div>
-                        <a href="https://mjkhan9.github.io/aws-student-data-infrastructure/" target="_blank" class="project-link">
-                            View Project
-                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                        </a>
-                    </div>
-
-                    <!-- IAM Lifecycle -->
-                    <div class="project-card">
-                        <div class="project-icon">👤</div>
-                        <h3 class="project-title">IAM Lifecycle Automation</h3>
-                        <p class="project-desc">Hybrid identity management syncing Active Directory with AWS IAM. Reduced provisioning time by 67% with Flask and PowerShell.</p>
-                        <div class="project-tags">
-                            <span class="tag">IAM</span>
-                            <span class="tag">Active Directory</span>
-                            <span class="tag">Flask</span>
-                            <span class="tag">PowerShell</span>
-                        </div>
-                        <a href="https://mjkhan9.github.io/Automated-IAM-User-Lifecycle-Management-System-Project/" target="_blank" class="project-link">
-                            View Project
-                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                        </a>
-                    </div>
-
-                    <!-- IT Simulator -->
-                    <div class="project-card">
-                        <div class="project-icon">🎫</div>
-                        <h3 class="project-title">IT Support Ticket Simulator</h3>
-                        <p class="project-desc">Interactive platform for IT ticket handling practice. Features 25+ PowerShell scripts and 50+ knowledge base articles.</p>
-                        <div class="project-tags">
-                            <span class="tag">JavaScript</span>
-                            <span class="tag">ITSM</span>
-                            <span class="tag">ServiceNow</span>
-                            <span class="tag">PowerShell</span>
-                        </div>
-                        <a href="https://mjkhan9.github.io/IT-Simulator-Project/" target="_blank" class="project-link">
-                            View Project
-                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                        </a>
-                    </div>
-
-                    <!-- MFA Incident Simulator -->
-                    <div class="project-card">
-                        <div class="project-icon">🚨</div>
-                        <h3 class="project-title">MFA Incident Response Simulator</h3>
-                        <p class="project-desc">Dual-mode incident detection for MFA failures. Real CloudTrail detection via EventBridge plus simulator mode for demos. Documented runbooks for each scenario.</p>
-                        <div class="project-tags">
-                            <span class="tag">CloudTrail</span>
-                            <span class="tag">EventBridge</span>
-                            <span class="tag">Lambda</span>
-                            <span class="tag">DynamoDB</span>
-                            <span class="tag">Terraform</span>
+            <div class="projects-featured">
+                <!-- Project 1: MFA Incident Response Simulator -->
+                <div class="project-featured">
+                    <div class="project-header">
+                        <div>
+                            <h3 class="project-title">MFA Incident Response Simulator</h3>
+                            <div class="project-subtitle">AWS IAM, CloudTrail, EventBridge, Lambda, DynamoDB, Python</div>
                         </div>
                         <a href="https://mjkhan9.github.io/aws-mfa-incident-simulator/" target="_blank" class="project-link">
-                            View Project
-                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                            View Project →
                         </a>
                     </div>
+                    <p class="project-description">
+                        An event-driven MFA incident detection pipeline using CloudTrail and EventBridge to identify authentication failures and abnormal login patterns in enterprise IAM environments. The system implements assisted remediation as an intentional safety constraint, requiring operator approval before IAM changes to limit blast radius and preserve accountability in regulated systems.
+                    </p>
+                    <div class="project-highlights">
+                        <div class="highlight">
+                            <div class="highlight-title">Architecture</div>
+                            <div class="highlight-text">EventBridge rules capture CloudTrail ConsoleLogin events, Lambda functions process incidents, DynamoDB stores incident state, and CloudWatch Insights queries enable post-hoc analysis</div>
+                        </div>
+                        <div class="highlight">
+                            <div class="highlight-title">Safety Design</div>
+                            <div class="highlight-text">Assisted remediation workflow ensures operator approval before any IAM modifications, maintaining audit trails and preventing automated privilege escalation</div>
+                        </div>
+                        <div class="highlight">
+                            <div class="highlight-title">Investigation Tools</div>
+                            <div class="highlight-text">Documented runbooks and CloudWatch Logs Insights queries for analyzing MFA failures, rate-limiting behavior, and escalation thresholds</div>
+                        </div>
+                    </div>
+                    <div class="project-tech">
+                        <span class="tech-tag">CloudTrail</span>
+                        <span class="tech-tag">EventBridge</span>
+                        <span class="tech-tag">Lambda</span>
+                        <span class="tech-tag">DynamoDB</span>
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">Terraform</span>
+                        <span class="tech-tag">CloudWatch</span>
+                    </div>
                 </div>
-            </div>
-        </section>
 
-        <!-- Skills -->
-        <section id="skills" class="section">
-            <div class="container">
-                <h2 class="section-title">Skills</h2>
-                <div class="skills-grid">
-                    <div class="skill-card">
-                        <div class="skill-icon">☁️</div>
-                        <div class="skill-name">AWS</div>
+                <!-- Project 2: Hybrid IAM User Lifecycle Management -->
+                <div class="project-featured">
+                    <div class="project-header">
+                        <div>
+                            <h3 class="project-title">Hybrid IAM User Lifecycle Management System</h3>
+                            <div class="project-subtitle">Active Directory, AWS IAM, PowerShell, Python, CloudFormation</div>
+                        </div>
+                        <a href="https://mjkhan9.github.io/Automated-IAM-User-Lifecycle-Management-System-Project/" target="_blank" class="project-link">
+                            View Project →
+                        </a>
                     </div>
-                    <div class="skill-card">
-                        <div class="skill-icon">🔧</div>
-                        <div class="skill-name">Terraform</div>
+                    <p class="project-description">
+                        A CLI-based IAM automation platform integrating Active Directory provisioning with AWS IAM workflows to standardize user onboarding and access management. Python scripts automate IAM user onboarding with least-privilege policies, integrating Secrets Manager for encrypted credential storage and SNS for workflow notifications. Includes secure de-provisioning and governance workflows with account disablement, group removal, dormant account detection, and centralized audit logging.
+                    </p>
+                    <div class="project-highlights">
+                        <div class="highlight">
+                            <div class="highlight-title">Hybrid Identity</div>
+                            <div class="highlight-text">PowerShell scripts manage on-premises Active Directory while Python/Boto3 handles AWS IAM, creating unified workflows across hybrid environments</div>
+                        </div>
+                        <div class="highlight">
+                            <div class="highlight-title">Automation</div>
+                            <div class="highlight-text">Reduces manual provisioning from 4+ hours to minutes through automated user creation, group assignment, policy attachment, and credential management</div>
+                        </div>
+                        <div class="highlight">
+                            <div class="highlight-title">Governance</div>
+                            <div class="highlight-text">Built-in compliance checks, dormant account detection, secure de-provisioning workflows, and CloudTrail audit logging for regulatory compliance</div>
+                        </div>
                     </div>
-                    <div class="skill-card">
-                        <div class="skill-icon">🐍</div>
-                        <div class="skill-name">Python</div>
-                    </div>
-                    <div class="skill-card">
-                        <div class="skill-icon">🔐</div>
-                        <div class="skill-name">IAM</div>
-                    </div>
-                    <div class="skill-card">
-                        <div class="skill-icon">📁</div>
-                        <div class="skill-name">Active Directory</div>
-                    </div>
-                    <div class="skill-card">
-                        <div class="skill-icon">🌐</div>
-                        <div class="skill-name">VPC</div>
-                    </div>
-                    <div class="skill-card">
-                        <div class="skill-icon">⚡</div>
-                        <div class="skill-name">PowerShell</div>
-                    </div>
-                    <div class="skill-card">
-                        <div class="skill-icon">🔄</div>
-                        <div class="skill-name">CI/CD</div>
+                    <div class="project-tech">
+                        <span class="tech-tag">Active Directory</span>
+                        <span class="tech-tag">AWS IAM</span>
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">PowerShell</span>
+                        <span class="tech-tag">CloudFormation</span>
+                        <span class="tech-tag">Secrets Manager</span>
+                        <span class="tech-tag">SNS</span>
                     </div>
                 </div>
             </div>
-        </section>
-    </main>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="skills-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label">Technical Skills</div>
+                <h2 class="section-title">What I Work With</h2>
+                <p class="section-subtitle">Click any skill to learn how I use it in practice</p>
+            </div>
+            <div class="skills-grid">
+                <!-- AWS -->
+                <div class="skill-card" onclick="this.classList.toggle('flipped')">
+                    <div class="skill-card-inner">
+                        <div class="skill-card-front">
+                            <div class="skill-icon">☁️</div>
+                            <div class="skill-name">AWS</div>
+                            <div class="skill-category">Cloud Infrastructure</div>
+                        </div>
+                        <div class="skill-card-back">
+                            <div class="skill-name">AWS</div>
+                            <div class="skill-description">
+                                Cloud infrastructure and services for identity management, monitoring, and automation.
+                            </div>
+                            <div class="skill-usage">
+                                <strong>How I use it:</strong> Deploy IAM automation pipelines, configure CloudTrail for audit logging, set up EventBridge for event-driven workflows, and manage VPC infrastructure for secure network isolation.
+                            </div>
+                            <div class="skill-examples">
+                                <div class="skill-examples-title">In My Projects:</div>
+                                <div class="skill-examples-list">MFA Incident Simulator (CloudTrail, EventBridge, Lambda), IAM Lifecycle System (IAM, Secrets Manager, SNS), Student Data Infrastructure (VPC, CloudTrail, GuardDuty)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Active Directory -->
+                <div class="skill-card" onclick="this.classList.toggle('flipped')">
+                    <div class="skill-card-inner">
+                        <div class="skill-card-front">
+                            <div class="skill-icon">📁</div>
+                            <div class="skill-name">Active Directory</div>
+                            <div class="skill-category">Identity Management</div>
+                        </div>
+                        <div class="skill-card-back">
+                            <div class="skill-name">Active Directory</div>
+                            <div class="skill-description">
+                                On-premises directory services for user management, group membership, and access control.
+                            </div>
+                            <div class="skill-usage">
+                                <strong>How I use it:</strong> PowerShell scripts automate user provisioning, OU placement, security group assignment, and account lifecycle management. Daily operations include investigating authentication failures and managing access for 8,000+ users.
+                            </div>
+                            <div class="skill-examples">
+                                <div class="skill-examples-title">In My Work:</div>
+                                <div class="skill-examples-list">Hybrid IAM project (AD provisioning automation), Daily ops (user creation, group management, MFA troubleshooting), Incident response (account lockouts, access denials)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Python -->
+                <div class="skill-card" onclick="this.classList.toggle('flipped')">
+                    <div class="skill-card-inner">
+                        <div class="skill-card-front">
+                            <div class="skill-icon">🐍</div>
+                            <div class="skill-name">Python</div>
+                            <div class="skill-category">Automation</div>
+                        </div>
+                        <div class="skill-card-back">
+                            <div class="skill-name">Python</div>
+                            <div class="skill-description">
+                                Scripting and automation for AWS IAM operations, incident processing, and infrastructure management.
+                            </div>
+                            <div class="skill-usage">
+                                <strong>How I use it:</strong> Boto3 for AWS API interactions, Lambda functions for event-driven processing, error handling and retry logic for production reliability, and structured logging for audit trails.
+                            </div>
+                            <div class="skill-examples">
+                                <div class="skill-examples-title">In My Projects:</div>
+                                <div class="skill-examples-list">IAM Lifecycle System (user provisioning automation), MFA Simulator (Lambda incident handlers), Student Data Infrastructure (IAM provisioning scripts)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PowerShell -->
+                <div class="skill-card" onclick="this.classList.toggle('flipped')">
+                    <div class="skill-card-inner">
+                        <div class="skill-card-front">
+                            <div class="skill-icon">⚡</div>
+                            <div class="skill-name">PowerShell</div>
+                            <div class="skill-category">Windows Automation</div>
+                        </div>
+                        <div class="skill-card-back">
+                            <div class="skill-name">PowerShell</div>
+                            <div class="skill-description">
+                                Automation for Active Directory operations, Windows system management, and hybrid identity workflows.
+                            </div>
+                            <div class="skill-usage">
+                                <strong>How I use it:</strong> Active Directory cmdlets for user provisioning, group membership management, and account lifecycle operations. Daily use for automating repetitive IAM tasks and improving turnaround time while preserving audit controls.
+                            </div>
+                            <div class="skill-examples">
+                                <div class="skill-examples-title">In My Work:</div>
+                                <div class="skill-examples-list">Hybrid IAM project (AD automation scripts), Daily ops (access changes, MFA requests, group updates), Incident response (account unlocks, password resets)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Terraform -->
+                <div class="skill-card" onclick="this.classList.toggle('flipped')">
+                    <div class="skill-card-inner">
+                        <div class="skill-card-front">
+                            <div class="skill-icon">🔧</div>
+                            <div class="skill-name">Terraform</div>
+                            <div class="skill-category">Infrastructure as Code</div>
+                        </div>
+                        <div class="skill-card-back">
+                            <div class="skill-name">Terraform</div>
+                            <div class="skill-description">
+                                Infrastructure as Code for provisioning AWS resources, managing configurations, and ensuring reproducibility.
+                            </div>
+                            <div class="skill-usage">
+                                <strong>How I use it:</strong> Modular architecture with reusable modules, state management for infrastructure tracking, and CI/CD integration for automated validation and security scanning.
+                            </div>
+                            <div class="skill-examples">
+                                <div class="skill-examples-title">In My Projects:</div>
+                                <div class="skill-examples-list">MFA Simulator (Lambda, DynamoDB, EventBridge infrastructure), Student Data Infrastructure (VPC, security groups, CloudTrail), 3-Tier Web App (11-module production architecture)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CloudTrail -->
+                <div class="skill-card" onclick="this.classList.toggle('flipped')">
+                    <div class="skill-card-inner">
+                        <div class="skill-card-front">
+                            <div class="skill-icon">📊</div>
+                            <div class="skill-name">CloudTrail</div>
+                            <div class="skill-category">Audit & Monitoring</div>
+                        </div>
+                        <div class="skill-card-back">
+                            <div class="skill-name">CloudTrail</div>
+                            <div class="skill-description">
+                                AWS API audit logging for security analysis, compliance, and incident investigation.
+                            </div>
+                            <div class="skill-usage">
+                                <strong>How I use it:</strong> Multi-region trail configuration, S3 log storage with encryption, CloudWatch integration for real-time alerting, and CloudWatch Insights queries for post-hoc analysis of authentication events.
+                            </div>
+                            <div class="skill-examples">
+                                <div class="skill-examples-title">In My Projects:</div>
+                                <div class="skill-examples-list">MFA Simulator (ConsoleLogin event detection), Student Data Infrastructure (API audit logging), IAM Lifecycle System (provisioning audit trails)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Entra ID -->
+                <div class="skill-card" onclick="this.classList.toggle('flipped')">
+                    <div class="skill-card-inner">
+                        <div class="skill-card-front">
+                            <div class="skill-icon">🔐</div>
+                            <div class="skill-name">Entra ID</div>
+                            <div class="skill-category">Cloud Identity</div>
+                        </div>
+                        <div class="skill-card-back">
+                            <div class="skill-name">Entra ID</div>
+                            <div class="skill-description">
+                                Microsoft's cloud identity platform for user management, SSO, MFA, and conditional access policies.
+                            </div>
+                            <div class="skill-usage">
+                                <strong>How I use it:</strong> Daily operations managing 8,000+ users, investigating MFA authentication failures, configuring conditional access policies, troubleshooting SSO issues, and managing hybrid identity synchronization.
+                            </div>
+                            <div class="skill-examples">
+                                <div class="skill-examples-title">In My Work:</div>
+                                <div class="skill-examples-list">Daily ops (user provisioning, MFA troubleshooting, access management), Incident response (authentication failures, access denials), Compliance (FERPA/HIPAA access controls)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- EventBridge -->
+                <div class="skill-card" onclick="this.classList.toggle('flipped')">
+                    <div class="skill-card-inner">
+                        <div class="skill-card-front">
+                            <div class="skill-icon">🔄</div>
+                            <div class="skill-name">EventBridge</div>
+                            <div class="skill-category">Event-Driven</div>
+                        </div>
+                        <div class="skill-card-back">
+                            <div class="skill-name">EventBridge</div>
+                            <div class="skill-description">
+                                Serverless event bus for building event-driven architectures and real-time event processing.
+                            </div>
+                            <div class="skill-usage">
+                                <strong>How I use it:</strong> Rules to capture CloudTrail events, route authentication failures to Lambda functions, and enable real-time incident detection without polling.
+                            </div>
+                            <div class="skill-examples">
+                                <div class="skill-examples-title">In My Projects:</div>
+                                <div class="skill-examples-list">MFA Simulator (ConsoleLogin event routing, real-time detection), Event-driven architecture (decoupled Lambda processing)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lambda -->
+                <div class="skill-card" onclick="this.classList.toggle('flipped')">
+                    <div class="skill-card-inner">
+                        <div class="skill-card-front">
+                            <div class="skill-icon">⚡</div>
+                            <div class="skill-name">Lambda</div>
+                            <div class="skill-category">Serverless</div>
+                        </div>
+                        <div class="skill-card-back">
+                            <div class="skill-name">Lambda</div>
+                            <div class="skill-description">
+                                Serverless compute for event-driven processing, automation, and microservice architectures.
+                            </div>
+                            <div class="skill-usage">
+                                <strong>How I use it:</strong> Python handlers for incident processing, dual-mode operation (detector + simulator), DynamoDB integration for state management, and error handling for production reliability.
+                            </div>
+                            <div class="skill-examples">
+                                <div class="skill-examples-title">In My Projects:</div>
+                                <div class="skill-examples-list">MFA Simulator (incident detection and processing), Event-driven workflows (EventBridge → Lambda → DynamoDB)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Additional Projects -->
+    <section class="additional-projects">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label">Additional Work</div>
+                <h2 class="section-title">Other Projects</h2>
+                <p class="section-subtitle">Additional portfolio work demonstrating infrastructure and automation capabilities</p>
+            </div>
+            <div class="projects-minimal">
+                <div class="project-minimal">
+                    <h4 class="project-minimal-title">AWS Student Data Infrastructure</h4>
+                    <p class="project-minimal-desc">Secure 3-tier VPC architecture with automated IAM provisioning and encrypted storage, demonstrating FERPA-aligned security controls and network isolation patterns.</p>
+                    <a href="https://mjkhan9.github.io/aws-student-data-infrastructure/" target="_blank" class="project-minimal-link">View Project →</a>
+                </div>
+                <div class="project-minimal">
+                    <h4 class="project-minimal-title">Terraform 3-Tier Web Application</h4>
+                    <p class="project-minimal-desc">Production-grade AWS infrastructure with 11 Terraform modules, CI/CD pipeline with automated security scanning, and operational runbooks for common issues.</p>
+                    <a href="https://mjkhan9.github.io/Terraform-3-Tier-Web-Application/" target="_blank" class="project-minimal-link">View Project →</a>
+                </div>
+                <div class="project-minimal">
+                    <h4 class="project-minimal-title">IT Support Ticket Simulator</h4>
+                    <p class="project-minimal-desc">Interactive web platform for practicing IT ticket workflows and troubleshooting scenarios, featuring simulated PowerShell automation and knowledge base articles.</p>
+                    <a href="https://mjkhan9.github.io/IT-Simulator-Project/" target="_blank" class="project-minimal-link">View Project →</a>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- Contact -->
     <section id="contact" class="contact-section">
         <div class="container">
-            <h2 class="section-title">Contact</h2>
-            <div class="contact-grid">
-                <div class="contact-item">
-                    <div class="contact-icon">📍</div>
-                    <div class="contact-label">Location</div>
-                    <div class="contact-value">Houston, TX</div>
-                </div>
-                <div class="contact-item">
-                    <div class="contact-icon">📞</div>
-                    <div class="contact-label">Phone</div>
-                    <a href="tel:832-612-9760" class="contact-value">(832) 612-9760</a>
-                </div>
-                <div class="contact-item">
-                    <div class="contact-icon">📧</div>
-                    <div class="contact-label">Email</div>
-                    <a href="mailto:mjkhan9@cougarnet.uh.edu" class="contact-value">mjkhan9@cougarnet.uh.edu</a>
-                </div>
-                <div class="contact-item">
-                    <div class="contact-icon">💼</div>
-                    <div class="contact-label">LinkedIn</div>
-                    <a href="https://linkedin.com/in/mohammad-jkhan" target="_blank" class="contact-value">mohammad-jkhan</a>
-                </div>
-            </div>
-            <div class="cta-box">
-                <h3 class="cta-title">Open to Opportunities</h3>
-                <p class="cta-desc">Looking for Cloud Engineer, IAM Engineer, or DevOps roles.</p>
-                <div class="cta-buttons">
-                    <a href="https://linkedin.com/in/mohammad-jkhan" target="_blank" class="btn btn-primary">
-                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-                        LinkedIn
-                    </a>
-                    <a href="mailto:mjkhan9@cougarnet.uh.edu" class="btn btn-outline">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-                        Email
-                    </a>
-                    <a href="https://github.com/Mjkhan9" target="_blank" class="btn btn-outline">
-                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-                        GitHub
-                    </a>
+            <div class="contact-content">
+                <h2 class="section-title">Get In Touch</h2>
+                <p class="contact-text">
+                    I'm actively seeking opportunities in IAM Engineering, Cloud Operations, and DevOps. If you're looking for someone with operational discipline, incident response experience, and a focus on building production-grade identity systems, let's connect.
+                </p>
+                <div class="contact-buttons">
+                    <a href="https://linkedin.com/in/mohammad-jkhan" target="_blank" class="btn btn-primary">LinkedIn</a>
+                    <a href="mailto:mjkhan9@cougarnet.uh.edu" class="btn btn-outline">Email</a>
+                    <a href="https://github.com/Mjkhan9" target="_blank" class="btn btn-outline">GitHub</a>
                 </div>
             </div>
         </div>
@@ -663,9 +1011,11 @@
 
     <footer>
         <div class="container">
-            <p class="footer-text">Mohammad Khan · AWS Solutions Architect · <a href="https://github.com/Mjkhan9" target="_blank">GitHub</a></p>
+            <p class="footer-text">
+                Mohammad Khan · Identity & Cloud Operations · AWS Solutions Architect Associate<br>
+                Houston, TX · <a href="mailto:mjkhan9@cougarnet.uh.edu">mjkhan9@cougarnet.uh.edu</a> · <a href="tel:8326129760">(832) 612-9760</a>
+            </p>
         </div>
     </footer>
 </body>
 </html>
-
